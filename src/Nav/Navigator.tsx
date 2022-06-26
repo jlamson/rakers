@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
 import GameList from "../Games/GameList";
 import { NavContext } from "./NavContext";
-import NavDests from "./NavDests";
+import NavDests, { Route } from "./NavDests";
 import { Box } from "@mui/material";
 import PilotShipList from "../PilotShips/PilotShipList";
 
-function getScreen(currentDest) {
+function getScreen(currentDest: Route) {
     if (currentDest.startsWith(NavDests.games.route)) {
         if (currentDest === NavDests.games.list) {
             return <GameList />

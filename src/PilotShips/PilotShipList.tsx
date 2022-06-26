@@ -5,8 +5,9 @@ import { List, ListItemButton, ListItemText, Paper } from '@mui/material';
 import { useContext } from 'react';
 import { NavContext } from '../Nav/NavContext';
 import NavDests from '../Nav/NavDests'
+import DocDataProps from '../Data/docDataProp';
 
-function PilotShipList(props) {
+function PilotShipList() {
     const db = getFirestore()
     const [value, loading, error] = useCollection(
         collection(db, "pilotShips")
@@ -19,20 +20,26 @@ function PilotShipList(props) {
             {loading && <p>Loading...</p>}
             {value && (
                 <List>
-                    {value.docs.map(pilotShipDoc => <PilotShipListItem key={pilotShipDoc.id} pilotShipDoc={pilotShipDoc} />)}
+                    {value.docs.map(doc => <PilotShipListItem key={doc.id} docData={doc} />)}
                 </List>
             )}
         </Paper>
     );
 }
 
-const PilotShipListItem = (props) => {
+
+
+const PilotShipListItem = (props: DocDataProps) => {
     const [_, navigateTo] = useContext(NavContext)
-    const pilotShipDoc = props.pilotShipDoc
-    const pilotShip = pilotShipDoc.data()
-    const startingSkills = `Starting Skills: ${pilotShip.startingSkills.reduce((acc, cur) => `${acc}, ${cur}`)}`
+    const docData = props.docData
+    const pilotShip = docData.data()
+    const startingSkills = `Starting Skills: ${
+        pilotShip.startingSkills
+            .reduce((acc: string, cur: string) => `${acc}, ${cur}`)
+            .slice(0, -1)
+    }`
     return (
-        <ListItemButton onClick={() => {navigateTo(NavDests.pilotShips.forId(pilotShipDoc.id))}}>
+        <ListItemButton onClick={() => {navigateTo(NavDests.pilotShips.forId(docData.id))}}>
             <ListItemText primary={pilotShip.name} />
             <ListItemText primary={pilotShip.specialAbility} />
             <ListItemText primary={startingSkills} />

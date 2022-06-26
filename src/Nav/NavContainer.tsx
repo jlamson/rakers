@@ -1,6 +1,6 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import MuiAppBar from '@mui/material/AppBar';
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -15,13 +15,15 @@ import Navigator from './Navigator';
 import DrawerNavItems from './DrawerNavItems';
 import { NavContext } from './NavContext';
 
-const drawerWidth = 240;
+const drawerWidth: number = 240;
 
-const mdTheme = createTheme();
+interface AppBarProps extends MuiAppBarProps {
+    open?: boolean;
+}
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
+})<AppBarProps>(({ theme, open }) => ({
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
@@ -37,36 +39,38 @@ const AppBar = styled(MuiAppBar, {
     }),
 }));
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-    ({ theme, open }) => ({
-        '& .MuiDrawer-paper': {
-            position: 'relative',
-            whiteSpace: 'nowrap',
-            width: drawerWidth,
+const Drawer = styled(MuiDrawer, {
+    shouldForwardProp: (prop) => prop !== 'open'
+})(({ theme, open }) => ({
+    '& .MuiDrawer-paper': {
+        position: 'relative',
+        whiteSpace: 'nowrap',
+        width: drawerWidth,
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        boxSizing: 'border-box',
+        ...(!open && {
+            overflowX: 'hidden',
             transition: theme.transitions.create('width', {
                 easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.enteringScreen,
+                duration: theme.transitions.duration.leavingScreen,
             }),
-            boxSizing: 'border-box',
-            ...(!open && {
-                overflowX: 'hidden',
-                transition: theme.transitions.create('width', {
-                    easing: theme.transitions.easing.sharp,
-                    duration: theme.transitions.duration.leavingScreen,
-                }),
-                width: theme.spacing(7),
-                [theme.breakpoints.up('sm')]: {
-                    width: theme.spacing(9),
-                },
-            }),
-        },
-    }),
-);
+            width: theme.spacing(7),
+            [theme.breakpoints.up('sm')]: {
+                width: theme.spacing(9),
+            },
+        }),
+    },
+}),);
 
-const NavContainer = (props) => {
-    const [currentDest, navigateTo] = useContext(NavContext)
+const mdTheme = createTheme();
+
+function NavContainer() {
+    const [currentDest, _] = useContext(NavContext)
     const [isDrawerOpen, setDrawerOpen] = useState(true);
-    const toggleDrawer = () => { setDrawerOpen(!isDrawerOpen) };
+    const toggleDrawer = () => { setDrawerOpen(!isDrawerOpen); };
 
     return (
         <ThemeProvider theme={mdTheme}>
@@ -139,4 +143,4 @@ const NavContainer = (props) => {
     );
 }
 
-export default NavContainer
+export default NavContainer;

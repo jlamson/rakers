@@ -5,8 +5,9 @@ import { List, ListItemButton, ListItemText, Paper } from '@mui/material';
 import { useContext } from 'react';
 import { NavContext } from '../Nav/NavContext';
 import NavDests from '../Nav/NavDests'
+import DocDataProps from '../Data/docDataProp';
 
-function GameList(props) {
+function GameList() {
     const db = getFirestore()
     const [value, loading, error] = useCollection(
         collection(db, "games")
@@ -19,16 +20,16 @@ function GameList(props) {
             {loading && <p>Loading...</p>}
             {value && (
                 <List>
-                    {value.docs.map(gameDoc => <GameListItem key={gameDoc.id} gameDoc={gameDoc} />)}
+                    {value.docs.map(docData => <GameListItem key={docData.id} docData={docData} />)}
                 </List>
             )}
         </Paper>
     );
 }
 
-const GameListItem = (props) => {
+const GameListItem = (props: DocDataProps) => {
     const [_, navigateTo] = useContext(NavContext)
-    const gameDoc = props.gameDoc
+    const gameDoc = props.docData
     const game = gameDoc.data()
     const label = `${game.name}, turn ${game.turn}`;
     
