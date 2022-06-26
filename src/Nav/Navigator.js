@@ -1,11 +1,11 @@
-import NavDests from "./NavDests";
+import { useContext } from "react";
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
+import { NavContext } from "./NavContext";
 
-const Navigator = (props) => {
-    const currentDest = props.currentDest
-    var content = <h1>{currentDest}</h1>
+const Navigator = () => {
+    const [currentDest, navigateTo] = useContext(NavContext)
     // if (currentDest.startsWith(NavDests.game.route)) {
     //     if (currentDest == NavDests.game.list) {
     //         content = <h1>Game List</h1>
@@ -28,7 +28,7 @@ const Navigator = (props) => {
                             height: 240,
                         }}
                     >
-                        {content}
+                        <h1>{currentDest}</h1>
                     </Paper>
                 </Grid>
             </Grid>

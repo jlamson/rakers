@@ -2,7 +2,7 @@ import React from 'react';
 import NavContainer from './Nav/NavContainer';
 
 // import firebase from 'firebase/app'
-// import 'firebase/firestore'
+import NavProvider from './Nav/NavContext';
 
 // import { useCollectionData } from 'react-firebase-hooks/firestore'
 
@@ -19,7 +19,7 @@ import NavContainer from './Nav/NavContainer';
 // const firestore = firebase.firestore()
 
 function App() {
-    return <NavContainer />;
+    return <NavProvider><NavContainer /></NavProvider>;
 }
 
 export default App;

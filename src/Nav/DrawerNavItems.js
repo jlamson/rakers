@@ -5,13 +5,15 @@ import ListItemText from '@mui/material/ListItemText';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import CasinoIcon from '@mui/icons-material/Casino';
 import NavDests from './NavDests';
+import { NavContext } from './NavContext';
 
-const DrawerNavItems = ({handleNav}) => {
+const DrawerNavItems = () => {
+    const [currentDest, navigateTo] = React.useContext(NavContext)
     return (
         <React.Fragment>
             <ListItemButton 
                 onClick={() => {
-                    handleNav(NavDests.games.list)
+                    navigateTo(NavDests.games.list)
                 }}>
                 <ListItemIcon>
                     <CasinoIcon />
@@ -20,7 +22,7 @@ const DrawerNavItems = ({handleNav}) => {
             </ListItemButton>
             <ListItemButton
                 onClick={() => {
-                    handleNav(NavDests.pilotShips)
+                    navigateTo(NavDests.pilotShips.list)
                 }}>
                 <ListItemIcon>
                     <RocketLaunchIcon />

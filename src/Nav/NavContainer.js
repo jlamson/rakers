@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
@@ -12,9 +11,9 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NavDests from './NavDests';
 import Navigator from './Navigator';
 import DrawerNavItems from './DrawerNavItems';
+import { NavContext } from './NavContext';
 
 const drawerWidth = 240;
 
@@ -65,10 +64,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const NavContainer = (props) => {
+    const [currentDest, navigateTo] = useContext(NavContext)
     const [isDrawerOpen, setDrawerOpen] = useState(true);
     const toggleDrawer = () => { setDrawerOpen(!isDrawerOpen) };
-
-    const [currentDest, setDest] = useState(NavDests.games.list)
 
     return (
         <ThemeProvider theme={mdTheme}>
@@ -99,7 +97,7 @@ const NavContainer = (props) => {
                             noWrap
                             sx={{ flexGrow: 1 }}
                         >
-                            Rakers Scorecards
+                            Rakers Scorecards &gt; {currentDest}
                         </Typography>
                     </Toolbar>
                 </AppBar>
@@ -118,7 +116,7 @@ const NavContainer = (props) => {
                     </Toolbar>
                     <Divider />
                     <List component="nav">
-                        <DrawerNavItems handleNav={setDest} />
+                        <DrawerNavItems />
                     </List>
                 </Drawer>
                 <Box
