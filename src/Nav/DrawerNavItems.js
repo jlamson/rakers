@@ -8,7 +8,7 @@ import NavDests from './NavDests';
 import { NavContext } from './NavContext';
 
 const DrawerNavItems = () => {
-    const [currentDest, navigateTo] = React.useContext(NavContext)
+    const [_, navigateTo] = React.useContext(NavContext)
     return (
         <React.Fragment>
             <ListItemButton 
