@@ -6,37 +6,38 @@ import { useContext } from 'react';
 import { NavContext } from '../Nav/NavContext';
 import NavDests from '../Nav/NavDests'
 
-function GameList(props) {
+function PilotShipList(props) {
     const db = getFirestore()
     const [value, loading, error] = useCollection(
-        collection(db, "games")
+        collection(db, "pilotShips")
     );
-    
+
     return ( 
         <Paper sx={{m:4, px:4, py:2}}>
-            <h1>All Games</h1>
+            <h1>All Pilots/Ships</h1>
             {error && <p>Error! {JSON.stringify(error)}</p>}
             {loading && <p>Loading...</p>}
             {value && (
                 <List>
-                    {value.docs.map(gameDoc => <GameListItem key={gameDoc.id} gameDoc={gameDoc} />)}
+                    {value.docs.map(pilotShipDoc => <PilotShipListItem key={pilotShipDoc.id} pilotShipDoc={pilotShipDoc} />)}
                 </List>
             )}
         </Paper>
     );
 }
 
-const GameListItem = (props) => {
+const PilotShipListItem = (props) => {
     const [_, navigateTo] = useContext(NavContext)
-    const gameDoc = props.gameDoc
-    const game = gameDoc.data()
-    const label = `${game.name}, turn ${game.turn}`;
-    
+    const pilotShipDoc = props.pilotShipDoc
+    const pilotShip = pilotShipDoc.data()
+    const startingSkills = `Starting Skills: ${pilotShip.startingSkills.reduce((acc, cur) => `${acc}, ${cur}`)}`
     return (
-        <ListItemButton onClick={() => {navigateTo(NavDests.games.forId(gameDoc.id))}}>
-            <ListItemText primary={label} />
+        <ListItemButton onClick={() => {navigateTo(NavDests.pilotShips.forId(pilotShipDoc.id))}}>
+            <ListItemText primary={pilotShip.name} />
+            <ListItemText primary={pilotShip.specialAbility} />
+            <ListItemText primary={startingSkills} />
         </ListItemButton>
     )
 }
 
-export default GameList;
+export default PilotShipList;

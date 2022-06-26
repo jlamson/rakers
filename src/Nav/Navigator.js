@@ -3,6 +3,7 @@ import GameList from "../Games/GameList";
 import { NavContext } from "./NavContext";
 import NavDests from "./NavDests";
 import { Box } from "@mui/material";
+import PilotShipList from "../PilotShips/PilotShipList";
 
 function getScreen(currentDest) {
     if (currentDest.startsWith(NavDests.games.route)) {
@@ -12,7 +13,11 @@ function getScreen(currentDest) {
             return <h1>Game/id: {currentDest}</h1>
         }
     } else if (currentDest.startsWith(NavDests.pilotShips.route)) {
-        return <h1>Pilots</h1>
+        if (currentDest === NavDests.pilotShips.list) {
+            return <PilotShipList />
+        } else {
+            return <h1>Pilot/id: {currentDest}</h1>
+        }
     } else {
         return <p>Oops, unhandled dest</p>
     }
