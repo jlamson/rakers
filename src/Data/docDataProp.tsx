@@ -1,5 +1,5 @@
 import { DocumentData } from "firebase/firestore";
 
 export default interface DocDataProps {
-    docData: DocumentData
+    docData: DocumentData;
 }

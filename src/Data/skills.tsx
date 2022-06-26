@@ -4,5 +4,5 @@ export const SkillsConsts = {
     INFORMED: "INFORMED",
     ACE_PILOT: "ACE_PILOT",
     COMBAT: "COMBAT",
-    GRIND: "GRIND"
-}
+    GRIND: "GRIND",
+};

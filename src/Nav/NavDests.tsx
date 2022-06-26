@@ -1,8 +1,7 @@
-
 const gameRoute = "game";
 const pilotShipRoute = "pilotShip";
 
-export type Route = string
+export type Route = string;
 
 export interface FeatureRoutes {
     route: Route;
@@ -11,21 +10,23 @@ export interface FeatureRoutes {
 }
 
 interface INavDests {
-    games: FeatureRoutes,
-    pilotShips: FeatureRoutes
+    games: FeatureRoutes;
+    pilotShips: FeatureRoutes;
 }
 
 function buildRoutes(baseRoute: string): FeatureRoutes {
     return {
         route: baseRoute,
         list: `${baseRoute}/list`,
-        forId: (id: string) => { return `${baseRoute}/${id}` }
+        forId: (id: string) => {
+            return `${baseRoute}/${id}`;
+        },
     };
-};
+}
 
-const NavDests: INavDests = { 
+const NavDests: INavDests = {
     games: buildRoutes(gameRoute),
-    pilotShips: buildRoutes(pilotShipRoute)
+    pilotShips: buildRoutes(pilotShipRoute),
 };
 
 export default NavDests;
