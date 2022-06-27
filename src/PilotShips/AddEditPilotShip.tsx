@@ -7,10 +7,11 @@ import {
     Box,
     Container,
     Grid,
+    Input,
     Paper,
+    Slider,
     Stack,
     TextField,
-    TextFieldProps,
     ToggleButton,
     Typography,
 } from "@mui/material";
@@ -31,8 +32,8 @@ export default function AddEditPilotShip() {
 
     return (
         <Box sx={{ m: 3, py: 2 }}>
-            <Stack spacing={2}>
-                <Typography sx={{ ml: 2 }} variant="h3">
+            <Stack spacing={1}>
+                <Typography sx={{ ml: 2 }} variant="h4">
                     {error && `Error! ${JSON.stringify(error)}`}
                     {loading && "Loading..."}
                     {pilotShip &&
@@ -58,9 +59,9 @@ function PilotShipForm(props: PilotShipFormProps) {
     const { pilotShip, onUpdate } = props;
 
     return (
-        <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Container maxWidth="lg" sx={{ py: 2 }}>
             <Grid container spacing={3}>
-                <Grid item xs={12} md={8} lg={9}>
+                <Grid item xs={12} md={7}>
                     <Paper
                         sx={{
                             p: 2,
@@ -69,6 +70,31 @@ function PilotShipForm(props: PilotShipFormProps) {
                         }}
                     >
                         <PilotForm pilotShip={pilotShip} onUpdate={onUpdate} />
+                    </Paper>
+                </Grid>
+                <Grid item xs={12} md={5}>
+                    <Paper
+                        sx={{
+                            p: 2,
+                            display: "flex",
+                            flexDirection: "column",
+                        }}
+                    >
+                        <ShipForm pilotShip={pilotShip} onUpdate={onUpdate} />
+                    </Paper>
+                </Grid>
+                <Grid item xs={12}>
+                    <Paper
+                        sx={{
+                            p: 2,
+                            display: "flex",
+                            flexDirection: "column",
+                        }}
+                    >
+                        <StartingRepSliders
+                            pilotShip={pilotShip}
+                            onUpdate={onUpdate}
+                        />
                     </Paper>
                 </Grid>
             </Grid>
@@ -82,7 +108,7 @@ function PilotForm(props: PilotShipFormProps) {
     return (
         <Grid container spacing={1}>
             <Grid item xs={12}>
-                <Typography sx={{ ml: 2 }} variant="h4">
+                <Typography sx={{ ml: 0.5 }} variant="h5">
                     Pilot Stats
                 </Typography>
             </Grid>
@@ -125,7 +151,7 @@ function PilotForm(props: PilotShipFormProps) {
                     }}
                 />
             </Grid>
-            <Grid item xs={12} sx={{mt: 2}}>
+            <Grid item xs={12} sx={{ mt: 2 }}>
                 <SkillsBox pilotShip={pilotShip} onUpdate={onUpdate} />
             </Grid>
         </Grid>
@@ -142,6 +168,7 @@ function SkillsBox(props: PilotShipFormProps) {
             onUpdate({ startingSkills: [...oldSkills, skill] });
         }
     }
+
     return (
         <React.Fragment>
             <Typography sx={{ ml: 1, mt: 2 }} variant="overline">
@@ -213,5 +240,177 @@ function SkillToggleButton(props: SkillToggleButtonProps) {
                 {displaySkill}
             </ToggleButton>
         </Grid>
+    );
+}
+
+function ShipForm(props: PilotShipFormProps) {
+    const { pilotShip, onUpdate } = props;
+
+    return (
+        <Grid container spacing={1}>
+            <Grid item xs={12}>
+                <Typography sx={{ ml: 0.5 }} variant="h5">
+                    Ship Stats
+                </Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <TextField
+                    required
+                    fullWidth
+                    label="Ship Name"
+                    variant="filled"
+                    defaultValue={pilotShip.ship.name}
+                    onChange={(event) => {
+                        onUpdate({ "ship.name": `${event.target.value}` });
+                    }}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <TextField
+                    required
+                    fullWidth
+                    label="Ship Type"
+                    variant="filled"
+                    defaultValue={pilotShip.ship.type}
+                    onChange={(event) => {
+                        onUpdate({ "ship.type": `${event.target.value}` });
+                    }}
+                />
+            </Grid>
+            <Grid item xs={12} md={6}>
+                <TextField
+                    fullWidth
+                    label="Speed"
+                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                    variant="filled"
+                    defaultValue={pilotShip.ship.speed}
+                    onChange={(event) => {
+                        onUpdate({
+                            "ship.speed": parseInt(event.target.value),
+                        });
+                    }}
+                />
+            </Grid>
+            <Grid item xs={12} md={6}>
+                <TextField
+                    fullWidth
+                    label="Hold Slots"
+                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                    variant="filled"
+                    defaultValue={pilotShip.ship.holdSlots}
+                    onChange={(event) => {
+                        onUpdate({
+                            "ship.holdSlots": parseInt(event.target.value),
+                        });
+                    }}
+                />
+            </Grid>
+            <Grid item xs={12} md={6}>
+                <TextField
+                    fullWidth
+                    label="Crew Slots"
+                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                    variant="filled"
+                    defaultValue={pilotShip.ship.crewSlots}
+                    onChange={(event) => {
+                        onUpdate({
+                            "ship.crewSlots": parseInt(event.target.value),
+                        });
+                    }}
+                />
+            </Grid>
+            <Grid item xs={12} md={6}>
+                <TextField
+                    fullWidth
+                    label="Equipment Slots"
+                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                    variant="filled"
+                    defaultValue={pilotShip.ship.equipmentSlots}
+                    onChange={(event) => {
+                        onUpdate({
+                            "ship.equipmentSlots": parseInt(event.target.value),
+                        });
+                    }}
+                />
+            </Grid>
+        </Grid>
+    );
+}
+
+function StartingRepSliders(props: PilotShipFormProps) {
+    const { pilotShip, onUpdate } = props;
+
+    return (
+        <Stack spacing={1}>
+            <Typography sx={{ ml: 0.5, mb: 1 }} variant="h5">
+                Starting Reputation
+            </Typography>
+            <RepSlider
+                agencyName="The Independants"
+                rep={pilotShip.startingRep.independents}
+                onRepChange={(rep: number) => {
+                    onUpdate({ "startingRep.independents": rep });
+                }}
+            />
+            <RepSlider
+                agencyName="The Coalition"
+                rep={pilotShip.startingRep.coalition}
+                onRepChange={(rep: number) => {
+                    onUpdate({ "startingRep.coalition": rep });
+                }}
+            />
+            <RepSlider
+                agencyName="The Starfolk"
+                rep={pilotShip.startingRep.starfolk}
+                onRepChange={(rep: number) => {
+                    onUpdate({ "startingRep.starfolk": rep });
+                }}
+            />
+        </Stack>
+    );
+}
+
+interface RepSliderProps {
+    rep: number;
+    agencyName: string;
+    onRepChange: (rep: number) => void;
+}
+
+function RepSlider(props: RepSliderProps) {
+    const { rep, agencyName, onRepChange } = props;
+
+    return (
+        <Box>
+            <Typography variant="overline">{agencyName}</Typography>
+            <Grid container spacing={2} alignItems="center">
+                <Grid item xs sx={{ mx: 2 }}>
+                    <Slider
+                        value={rep >= 20 ? 20 : rep}
+                        onChange={(e: Event, value: number | number[]) => {
+                            onRepChange(typeof value === "number" ? value : 0);
+                        }}
+                        marks
+                        min={0}
+                        max={20}
+                    />
+                </Grid>
+                <Grid item>
+                    <Input
+                        value={rep}
+                        size="small"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            onRepChange(parseInt(e.target.value));
+                        }}
+                        inputProps={{
+                            step: 1,
+                            min: 0,
+                            max: 50,
+                            type: "number",
+                            "aria-labelledby": "input-slider",
+                        }}
+                    />
+                </Grid>
+            </Grid>
+        </Box>
     );
 }
