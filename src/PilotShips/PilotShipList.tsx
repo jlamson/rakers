@@ -9,8 +9,9 @@ import { PilotShip, pilotShipConverter } from "../Data/pilotship";
 
 function PilotShipList() {
     const [data, loading, error] = useCollectionData(
-        collection(getFirestore(), "pilotShips")
-            .withConverter(pilotShipConverter)
+        collection(getFirestore(), "pilotShips").withConverter(
+            pilotShipConverter
+        )
     );
 
     return (
@@ -21,9 +22,10 @@ function PilotShipList() {
             {data && (
                 <List>
                     {data.map((pilotShip) => (
-                        <PilotShipListItem 
+                        <PilotShipListItem
                             key={pilotShip.id}
-                            pilotShip={pilotShip} />
+                            pilotShip={pilotShip}
+                        />
                     ))}
                 </List>
             )}
@@ -38,16 +40,15 @@ interface PilotShipProps {
 const PilotShipListItem = (props: PilotShipProps) => {
     const [_, navigateTo] = useContext(NavContext);
     const pilotShip = props.pilotShip;
-    const startingSkills = `Starting Skills: ${pilotShip.startingSkills}`;
     return (
         <ListItemButton
             onClick={() => {
                 navigateTo(NavDests.pilotShips.forId(pilotShip.id));
             }}
         >
-            <ListItemText primary={pilotShip.name} />
-            <ListItemText primary={pilotShip.specialAbility} />
-            <ListItemText primary={startingSkills} />
+            <ListItemText
+                primary={`${pilotShip.name} (${pilotShip.startingSkills})`}
+            />
         </ListItemButton>
     );
 };
