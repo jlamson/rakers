@@ -1,5 +1,5 @@
-export default interface Rep {
+export type Rep = {
     coalition: number;
     independents: number;
     starfolk: number;
-}
+};

@@ -6,10 +6,10 @@ import {
     SnapshotOptions,
     WithFieldValue,
 } from "firebase/firestore";
-import Rep from "./rep";
+import { Rep } from "./rep";
 import Skills from "./skills";
 
-export interface Ship {
+export type Ship = {
     name: string;
     type: string;
     speed: number;
@@ -18,7 +18,7 @@ export interface Ship {
     holdSlots: number;
 }
 
-export interface PilotShip {
+export type PilotShip = {
     id: string;
     ref: DocumentReference;
     name: string;
