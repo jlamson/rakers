@@ -11,7 +11,7 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import Navigator from "./Navigator";
+import Router from "./Router";
 import DrawerNavItems from "./DrawerNavItems";
 import { NavContext } from "./NavContext";
 
@@ -138,7 +138,7 @@ function NavContainer() {
                     }}
                 >
                     <Toolbar />
-                    <Navigator />
+                    <Router />
                 </Box>
             </Box>
         </ThemeProvider>

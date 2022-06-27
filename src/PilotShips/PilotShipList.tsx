@@ -1,15 +1,16 @@
 import React from "react";
 import { getFirestore, collection } from "firebase/firestore";
-import { useCollection } from "react-firebase-hooks/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 import { List, ListItemButton, ListItemText, Paper } from "@mui/material";
 import { useContext } from "react";
 import { NavContext } from "../Nav/NavContext";
 import NavDests from "../Nav/NavDests";
-import DocDataProps from "../Data/docDataProp";
+import { PilotShip, pilotShipConverter } from "../Data/pilotship";
 
 function PilotShipList() {
-    const [value, loading, error] = useCollection(
+    const [data, loading, error] = useCollectionData(
         collection(getFirestore(), "pilotShips")
+            .withConverter(pilotShipConverter)
     );
 
     return (
@@ -17,10 +18,12 @@ function PilotShipList() {
             <h1>All Pilots/Ships</h1>
             {error && <p>Error! {JSON.stringify(error)}</p>}
             {loading && <p>Loading...</p>}
-            {value && (
+            {data && (
                 <List>
-                    {value.docs.map((doc) => (
-                        <PilotShipListItem key={doc.id} docData={doc} />
+                    {data.map((pilotShip) => (
+                        <PilotShipListItem 
+                            key={pilotShip.id}
+                            pilotShip={pilotShip} />
                     ))}
                 </List>
             )}
@@ -28,17 +31,18 @@ function PilotShipList() {
     );
 }
 
-const PilotShipListItem = (props: DocDataProps) => {
+interface PilotShipProps {
+    pilotShip: PilotShip;
+}
+
+const PilotShipListItem = (props: PilotShipProps) => {
     const [_, navigateTo] = useContext(NavContext);
-    const docData = props.docData;
-    const pilotShip = docData.data();
-    const startingSkills = `Starting Skills: ${pilotShip.startingSkills
-        .reduce((acc: string, cur: string) => `${acc}, ${cur}`)
-        .slice(0, -1)}`;
+    const pilotShip = props.pilotShip;
+    const startingSkills = `Starting Skills: ${pilotShip.startingSkills}`;
     return (
         <ListItemButton
             onClick={() => {
-                navigateTo(NavDests.pilotShips.forId(docData.id));
+                navigateTo(NavDests.pilotShips.forId(pilotShip.id));
             }}
         >
             <ListItemText primary={pilotShip.name} />

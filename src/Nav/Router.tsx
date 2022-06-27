@@ -4,6 +4,7 @@ import { NavContext } from "./NavContext";
 import NavDests, { Route } from "./NavDests";
 import { Box } from "@mui/material";
 import PilotShipList from "../PilotShips/PilotShipList";
+import AddEditPilotShip from "../PilotShips/AddEditPilotShip";
 
 function getScreen(currentDest: Route) {
     if (currentDest.startsWith(NavDests.games.route)) {
@@ -16,14 +17,14 @@ function getScreen(currentDest: Route) {
         if (currentDest === NavDests.pilotShips.list) {
             return <PilotShipList />;
         } else {
-            return <h1>Pilot/id: {currentDest}</h1>;
+            return <AddEditPilotShip />
         }
     } else {
         return <p>Oops, unhandled dest</p>;
     }
 }
 
-const Navigator = () => {
+const Router = () => {
     const [currentDest, _] = useContext(NavContext);
     return (
         <Box>
@@ -32,4 +33,4 @@ const Navigator = () => {
     );
 };
 
-export default Navigator;
+export default Router;
