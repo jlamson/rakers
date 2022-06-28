@@ -2,20 +2,20 @@ import React, { useContext } from "react";
 import { NavContext } from "../Nav/NavContext";
 import { getFirestore, doc, updateDoc, UpdateData } from "firebase/firestore";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { PilotShip, pilotShipConverter } from "../Data/pilotship";
+import { PilotShip, pilotShipConverter } from "../Data/PilotShip";
 import {
     Box,
     Container,
     Grid,
-    Input,
     Paper,
-    Slider,
     Stack,
     TextField,
-    ToggleButton,
     Typography,
 } from "@mui/material";
-import Skills from "../Data/skills";
+import Skills from "../Data/Skills";
+import { RepSlider } from "../Components/RepSlider";
+import SkillsBox from "../Components/SkillsBox";
+import FirebaseDataProps from "../Data/FirebaseDataProps";
 
 export default function AddEditPilotShip() {
     const [currentDest, _] = useContext(NavContext);
@@ -41,7 +41,7 @@ export default function AddEditPilotShip() {
                 </Typography>
                 {pilotShip && (
                     <PilotShipForm
-                        pilotShip={pilotShip}
+                        data={pilotShip}
                         onUpdate={updatePilotShip}
                     />
                 )}
@@ -50,49 +50,33 @@ export default function AddEditPilotShip() {
     );
 }
 
-interface PilotShipFormProps {
-    pilotShip: PilotShip;
-    onUpdate: (updateData: UpdateData<PilotShip>) => void;
-}
+interface PilotShipFormProps extends FirebaseDataProps<PilotShip> {}
 
 function PilotShipForm(props: PilotShipFormProps) {
-    const { pilotShip, onUpdate } = props;
+    const { data: pilotShip, onUpdate } = props;
+    const paperSx = {
+        p: 2,
+        display: "flex",
+        flexDirection: "column",
+    };
 
     return (
         <Container maxWidth="lg" sx={{ py: 2 }}>
             <Grid container spacing={3}>
                 <Grid item xs={12} md={7}>
-                    <Paper
-                        sx={{
-                            p: 2,
-                            display: "flex",
-                            flexDirection: "column",
-                        }}
-                    >
-                        <PilotForm pilotShip={pilotShip} onUpdate={onUpdate} />
+                    <Paper sx={paperSx}>
+                        <PilotForm data={pilotShip} onUpdate={onUpdate} />
                     </Paper>
                 </Grid>
                 <Grid item xs={12} md={5}>
-                    <Paper
-                        sx={{
-                            p: 2,
-                            display: "flex",
-                            flexDirection: "column",
-                        }}
-                    >
-                        <ShipForm pilotShip={pilotShip} onUpdate={onUpdate} />
+                    <Paper sx={paperSx}>
+                        <ShipForm data={pilotShip} onUpdate={onUpdate} />
                     </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                    <Paper
-                        sx={{
-                            p: 2,
-                            display: "flex",
-                            flexDirection: "column",
-                        }}
-                    >
+                    <Paper sx={paperSx}>
                         <StartingRepSliders
-                            pilotShip={pilotShip}
+                            data={pilotShip}
                             onUpdate={onUpdate}
                         />
                     </Paper>
@@ -103,7 +87,16 @@ function PilotShipForm(props: PilotShipFormProps) {
 }
 
 function PilotForm(props: PilotShipFormProps) {
-    const { pilotShip, onUpdate } = props;
+    const { data: pilotShip, onUpdate } = props;
+
+    function toggleSkill(skill: Skills) {
+        const oldSkills = pilotShip.startingSkills;
+        if (oldSkills.includes(skill)) {
+            onUpdate({ startingSkills: oldSkills.filter((s) => s !== skill) });
+        } else {
+            onUpdate({ startingSkills: [...oldSkills, skill] });
+        }
+    }
 
     return (
         <Grid container spacing={1}>
@@ -152,99 +145,17 @@ function PilotForm(props: PilotShipFormProps) {
                 />
             </Grid>
             <Grid item xs={12} sx={{ mt: 2 }}>
-                <SkillsBox pilotShip={pilotShip} onUpdate={onUpdate} />
-            </Grid>
-        </Grid>
-    );
-}
-
-function SkillsBox(props: PilotShipFormProps) {
-    const { pilotShip, onUpdate } = props;
-    function toggleSkill(skill: Skills) {
-        const oldSkills = pilotShip.startingSkills;
-        if (oldSkills.includes(skill)) {
-            onUpdate({ startingSkills: oldSkills.filter((s) => s !== skill) });
-        } else {
-            onUpdate({ startingSkills: [...oldSkills, skill] });
-        }
-    }
-
-    return (
-        <React.Fragment>
-            <Typography sx={{ ml: 1, mt: 2 }} variant="overline">
-                Starting Skills
-            </Typography>
-            <Grid container spacing={2}>
-                <SkillToggleButton
-                    pilotSkills={pilotShip.startingSkills}
-                    skill={Skills.QUICK_THINK}
-                    displaySkill={"Quick Think"}
-                    toggleSkill={toggleSkill}
-                />
-                <SkillToggleButton
-                    pilotSkills={pilotShip.startingSkills}
-                    skill={Skills.DIPLOMACY}
-                    displaySkill={"Diplomacy"}
-                    toggleSkill={toggleSkill}
-                />
-                <SkillToggleButton
-                    pilotSkills={pilotShip.startingSkills}
-                    skill={Skills.INFORMED}
-                    displaySkill={"Informed"}
-                    toggleSkill={toggleSkill}
-                />
-                <SkillToggleButton
-                    pilotSkills={pilotShip.startingSkills}
-                    skill={Skills.ACE_PILOT}
-                    displaySkill={"Ace Pilot"}
-                    toggleSkill={toggleSkill}
-                />
-                <SkillToggleButton
-                    pilotSkills={pilotShip.startingSkills}
-                    skill={Skills.COMBAT}
-                    displaySkill={"Combat"}
-                    toggleSkill={toggleSkill}
-                />
-                <SkillToggleButton
-                    pilotSkills={pilotShip.startingSkills}
-                    skill={Skills.GRIND}
-                    displaySkill={"Grind"}
+                <SkillsBox
+                    skills={pilotShip.startingSkills}
                     toggleSkill={toggleSkill}
                 />
             </Grid>
-        </React.Fragment>
-    );
-}
-
-interface SkillToggleButtonProps {
-    pilotSkills: Skills[];
-    skill: Skills;
-    displaySkill: string;
-    toggleSkill: (skill: Skills) => void;
-}
-
-function SkillToggleButton(props: SkillToggleButtonProps) {
-    const { pilotSkills, skill, displaySkill, toggleSkill } = props;
-    const selected = pilotSkills.includes(skill);
-    return (
-        <Grid item xs={6} sm={4} lg={3} xl={2}>
-            <ToggleButton
-                fullWidth
-                color="secondary"
-                value={skill}
-                selected={selected}
-                onChange={() => {
-                    toggleSkill(skill);
-                }}
-            >
-                {displaySkill}
-            </ToggleButton>
         </Grid>
     );
 }
 
 function ShipForm(props: PilotShipFormProps) {
-    const { pilotShip, onUpdate } = props;
+    const { data: pilotShip, onUpdate } = props;
 
     return (
         <Grid container spacing={1}>
@@ -338,7 +249,7 @@ function ShipForm(props: PilotShipFormProps) {
 }
 
 function StartingRepSliders(props: PilotShipFormProps) {
-    const { pilotShip, onUpdate } = props;
+    const { data: pilotShip, onUpdate } = props;
 
     return (
         <Stack spacing={1}>
@@ -367,50 +278,5 @@ function StartingRepSliders(props: PilotShipFormProps) {
                 }}
             />
         </Stack>
-    );
-}
-
-interface RepSliderProps {
-    rep: number;
-    agencyName: string;
-    onRepChange: (rep: number) => void;
-}
-
-function RepSlider(props: RepSliderProps) {
-    const { rep, agencyName, onRepChange } = props;
-
-    return (
-        <Box>
-            <Typography variant="overline">{agencyName}</Typography>
-            <Grid container spacing={2} alignItems="center">
-                <Grid item xs sx={{ mx: 2 }}>
-                    <Slider
-                        value={rep >= 20 ? 20 : rep}
-                        onChange={(e: Event, value: number | number[]) => {
-                            onRepChange(typeof value === "number" ? value : 0);
-                        }}
-                        marks
-                        min={0}
-                        max={20}
-                    />
-                </Grid>
-                <Grid item>
-                    <Input
-                        value={rep}
-                        size="small"
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            onRepChange(parseInt(e.target.value));
-                        }}
-                        inputProps={{
-                            step: 1,
-                            min: 0,
-                            max: 50,
-                            type: "number",
-                            "aria-labelledby": "input-slider",
-                        }}
-                    />
-                </Grid>
-            </Grid>
-        </Box>
     );
 }

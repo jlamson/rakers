@@ -5,7 +5,7 @@ import { List, ListItemButton, ListItemText, Paper } from "@mui/material";
 import { useContext } from "react";
 import { NavContext } from "../Nav/NavContext";
 import NavDests from "../Nav/NavDests";
-import { PilotShip, pilotShipConverter } from "../Data/pilotship";
+import { PilotShip, pilotShipConverter } from "../Data/PilotShip";
 
 function PilotShipList() {
     const [data, loading, error] = useCollectionData(

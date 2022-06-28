@@ -1,26 +1,32 @@
 import React from "react";
-import { getFirestore, collection } from "firebase/firestore";
-import { useCollection } from "react-firebase-hooks/firestore";
+import { getFirestore, collection, UpdateData } from "firebase/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 import { List, ListItemButton, ListItemText, Paper } from "@mui/material";
 import { useContext } from "react";
 import { NavContext } from "../Nav/NavContext";
 import NavDests from "../Nav/NavDests";
-import DocDataProps from "../Data/docDataProp";
+import FirebaseDataProps from "../Data/FirebaseDataProps";
+import { Game, gameConverter } from "../Data/Game";
 
 function GameList() {
-    const [value, loading, error] = useCollection(
-        collection(getFirestore(), "games")
+    const [values, loading, error, snapshot] = useCollectionData<Game>(
+        collection(getFirestore(), "games").withConverter(gameConverter)
     );
+    const doNothing = (_: UpdateData<Game>) => {};
 
     return (
         <Paper sx={{ m: 4, px: 4, py: 2 }}>
             <h1>All Games</h1>
             {error && <p>Error! {JSON.stringify(error)}</p>}
             {loading && <p>Loading...</p>}
-            {value && (
+            {values && (
                 <List>
-                    {value.docs.map((docData) => (
-                        <GameListItem key={docData.id} docData={docData} />
+                    {values.map((game) => (
+                        <GameListItem
+                            key={game.id}
+                            data={game}
+                            onUpdate={doNothing}
+                        />
                     ))}
                 </List>
             )}
@@ -28,16 +34,15 @@ function GameList() {
     );
 }
 
-const GameListItem = (props: DocDataProps) => {
+const GameListItem = (props: FirebaseDataProps<Game>) => {
+    const game = props.data;
     const [_, navigateTo] = useContext(NavContext);
-    const gameDoc = props.docData;
-    const game = gameDoc.data();
     const label = `${game.name}, turn ${game.turn}`;
 
     return (
         <ListItemButton
             onClick={() => {
-                navigateTo(NavDests.games.forId(gameDoc.id));
+                navigateTo(NavDests.games.forId(game.id));
             }}
         >
             <ListItemText primary={label} />

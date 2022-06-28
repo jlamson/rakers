@@ -6,17 +6,9 @@ import {
     SnapshotOptions,
     WithFieldValue,
 } from "firebase/firestore";
-import { Rep } from "./rep";
-import Skills from "./skills";
-
-export type Ship = {
-    name: string;
-    type: string;
-    speed: number;
-    crewSlots: number;
-    equipmentSlots: number;
-    holdSlots: number;
-}
+import { Rep } from "./Rep";
+import { Ship } from "./Ship";
+import Skills from "./Skills";
 
 export type PilotShip = {
     id: string;
@@ -27,7 +19,7 @@ export type PilotShip = {
     startingCrebits: number;
     startingRep: Rep;
     startingSkills: Skills[];
-}
+};
 
 export const pilotShipConverter: FirestoreDataConverter<PilotShip> = {
     toFirestore(model: WithFieldValue<PilotShip>): DocumentData {
@@ -44,7 +36,7 @@ export const pilotShipConverter: FirestoreDataConverter<PilotShip> = {
         snapshot: QueryDocumentSnapshot<DocumentData>,
         options: SnapshotOptions
     ): PilotShip {
-        const data = snapshot.data()
+        const data = snapshot.data();
         return {
             id: snapshot.id,
             ref: snapshot.ref,
@@ -53,7 +45,7 @@ export const pilotShipConverter: FirestoreDataConverter<PilotShip> = {
             specialAbility: data.specialAbility,
             startingCrebits: data.startingCrebits,
             startingRep: data.startingRep,
-            startingSkills: data.startingSkills
-        }
+            startingSkills: data.startingSkills,
+        };
     },
 };
