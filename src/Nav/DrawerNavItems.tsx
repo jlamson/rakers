@@ -8,7 +8,8 @@ import NavDests from "./NavDests";
 import { NavContext } from "./NavContext";
 
 const DrawerNavItems = () => {
-    const [_, navigateTo] = React.useContext(NavContext);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_currentDest, navigateTo] = React.useContext(NavContext);
     return (
         <React.Fragment>
             <ListItemButton

@@ -38,7 +38,8 @@ interface PilotShipProps {
 }
 
 const PilotShipListItem = (props: PilotShipProps) => {
-    const [_, navigateTo] = useContext(NavContext);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_currentDest, navigateTo] = useContext(NavContext);
     const pilotShip = props.pilotShip;
     return (
         <ListItemButton

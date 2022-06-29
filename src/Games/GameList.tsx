@@ -9,7 +9,8 @@ import FirebaseDataProps from "../Data/FirebaseDataProps";
 import { Game, gameConverter } from "../Data/Game";
 
 function GameList() {
-    const [values, loading, error, snapshot] = useCollectionData<Game>(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [values, loading, error, _snapshot] = useCollectionData<Game>(
         collection(getFirestore(), "games").withConverter(gameConverter)
     );
     const doNothing = (_: UpdateData<Game>) => {};
@@ -36,7 +37,8 @@ function GameList() {
 
 const GameListItem = (props: FirebaseDataProps<Game>) => {
     const game = props.data;
-    const [_, navigateTo] = useContext(NavContext);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_currentDest, navigateTo] = useContext(NavContext);
     const label = `${game.name}, turn ${game.turn}`;
 
     return (

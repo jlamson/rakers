@@ -68,7 +68,8 @@ const Drawer = styled(MuiDrawer, {
 const mdTheme = createTheme();
 
 function NavContainer() {
-    const [currentDest, _] = useContext(NavContext);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [currentDest, _navigateTo] = useContext(NavContext);
     const [isDrawerOpen, setDrawerOpen] = useState(true);
     const toggleDrawer = () => {
         setDrawerOpen(!isDrawerOpen);

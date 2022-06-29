@@ -18,7 +18,8 @@ import SkillsBox from "../Components/SkillsBox";
 import FirebaseDataProps from "../Data/FirebaseDataProps";
 
 export default function AddEditPilotShip() {
-    const [currentDest, _] = useContext(NavContext);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [currentDest, _navigateTo] = useContext(NavContext);
     const id = currentDest.split("/")[1];
     const pilotShipRef = doc(getFirestore(), "pilotShips", id);
     const [pilotShip, loading, error] = useDocumentData(

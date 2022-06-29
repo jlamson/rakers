@@ -17,7 +17,7 @@ function getScreen(currentDest: Route) {
         if (currentDest === NavDests.pilotShips.list) {
             return <PilotShipList />;
         } else {
-            return <AddEditPilotShip />
+            return <AddEditPilotShip />;
         }
     } else {
         return <p>Oops, unhandled dest</p>;
@@ -25,7 +25,8 @@ function getScreen(currentDest: Route) {
 }
 
 const Router = () => {
-    const [currentDest, _] = useContext(NavContext);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [currentDest, _navigateTo] = useContext(NavContext);
     return (
         <Box>
             <React.Fragment>{getScreen(currentDest)}</React.Fragment>
