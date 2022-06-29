@@ -8,11 +8,20 @@ import {
 } from "@firebase/firestore";
 
 export type Game = {
-    id: string;
-    ref: DocumentReference;
+    id: string | undefined;
+    ref: DocumentReference | undefined;
     name: string;
     turn: number;
 };
+
+export function buildNewGame(): Game {
+    return {
+        id: undefined,
+        ref: undefined,
+        name: "New Game",
+        turn: 0,
+    };
+}
 
 export const gameConverter: FirestoreDataConverter<Game> = {
     toFirestore(model: WithFieldValue<Game>): DocumentData {

@@ -32,10 +32,10 @@ function PilotShipList() {
     ).withConverter(pilotShipConverter);
 
     const [data, loading, error] = useCollectionData(collectionRef);
-    const [isAddRemoveLoading, setIsAddRemoveLoading] = useState(false);
+    const [isAddLoading, setIsAddLoading] = useState(false);
 
     function addNewPilot() {
-        setIsAddRemoveLoading(true);
+        setIsAddLoading(true);
         addDoc(collectionRef, buildNewPilot("New Pilot"))
             .then(
                 (value: DocumentReference<PilotShip>) => {
@@ -53,7 +53,7 @@ function PilotShipList() {
                 alert("Failed to create new pilot");
             })
             .finally(() => {
-                setIsAddRemoveLoading(false);
+                setIsAddLoading(false);
             });
     }
 
@@ -61,7 +61,7 @@ function PilotShipList() {
         <Paper sx={{ m: 4, px: 4, py: 2 }}>
             <h1>All Pilots/Ships</h1>
             {error && <p>Error! {JSON.stringify(error)}</p>}
-            {(loading || isAddRemoveLoading) && <p>Loading...</p>}
+            {(loading || isAddLoading) && <p>Loading...</p>}
             {data && (
                 <List>
                     {data.map((pilotShip) => (
