@@ -5,13 +5,14 @@ import NavDests, { Route } from "./NavDests";
 import { Box } from "@mui/material";
 import PilotShipList from "../PilotShips/PilotShipList";
 import AddEditPilotShip from "../PilotShips/AddEditPilotShip";
+import GameScoreboard from "../Games/GameScoreboard";
 
 function getScreen(currentDest: Route) {
     if (currentDest.startsWith(NavDests.games.route)) {
         if (currentDest === NavDests.games.list) {
             return <GameList />;
         } else {
-            return <h1>Game/id: {currentDest}</h1>;
+            return <GameScoreboard />;
         }
     } else if (currentDest.startsWith(NavDests.pilotShips.route)) {
         if (currentDest === NavDests.pilotShips.list) {
