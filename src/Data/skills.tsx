@@ -5,8 +5,8 @@ enum Skills {
     ACE_PILOT = "ACE_PILOT",
     COMBAT = "COMBAT",
     GRIND = "GRIND",
-};
+}
 
-export type SkillStrings = keyof typeof Skills
+export type SkillStrings = keyof typeof Skills;
 
-export default Skills
+export default Skills;
