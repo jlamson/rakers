@@ -52,7 +52,7 @@ export function buildNewPilot(name: string): WithFieldValue<PilotShip> {
 }
 
 export const pilotShipConverter: FirestoreDataConverter<PilotShip> = {
-    toFirestore(model: WithFieldValue<PilotShip>): DocumentData {
+    toFirestore: function (model: WithFieldValue<PilotShip>): DocumentData {
         return {
             name: model.name,
             ship: model.ship,
