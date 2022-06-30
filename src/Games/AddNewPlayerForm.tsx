@@ -42,7 +42,7 @@ export function AddNewPlayerForm(props: AddNewPlayerFormProps) {
                         fullWidth
                         label="Player Name"
                         variant="filled"
-                        defaultValue={playerName}
+                        value={playerName}
                         onChange={(event) => {
                             setPlayerName(event.target.value);
                         }}
