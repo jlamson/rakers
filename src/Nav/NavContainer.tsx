@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import MuiDrawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -39,32 +38,6 @@ const AppBar = styled(MuiAppBar, {
         }),
     }),
 }));
-
-// const Drawer = styled(MuiDrawer, {
-//     shouldForwardProp: (prop) => prop !== "open",
-// })(({ theme, open }) => ({
-//     "& .MuiDrawer-paper": {
-//         position: "relative",
-//         whiteSpace: "nowrap",
-//         width: drawerWidth,
-//         transition: theme.transitions.create("width", {
-//             easing: theme.transitions.easing.sharp,
-//             duration: theme.transitions.duration.enteringScreen,
-//         }),
-//         boxSizing: "border-box",
-//         ...(!open && {
-//             overflowX: "hidden",
-//             transition: theme.transitions.create("width", {
-//                 easing: theme.transitions.easing.sharp,
-//                 duration: theme.transitions.duration.leavingScreen,
-//             }),
-//             width: theme.spacing(5),
-//             [theme.breakpoints.up("sm")]: {
-//                 width: "54px",
-//             },
-//         }),
-//     },
-// }));
 
 const mdTheme = createTheme();
 

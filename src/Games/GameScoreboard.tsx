@@ -3,7 +3,6 @@ import {
     Stack,
     Typography,
     Button,
-    Container,
     Grid,
     Paper,
     TextField,
@@ -34,6 +33,7 @@ import { buildNewPlayer, Player, playerConverter } from "../Data/Player";
 import { TurnCounter } from "./TurnCounter";
 import { PlayerList } from "./PlayerList";
 import { AddNewPlayerForm } from "./AddNewPlayerForm";
+import BigTitleInput from "../Components/BigTitleInput";
 
 export default function GameScoreboard() {
     const [currentDest, navigateTo] = useContext(NavContext);
@@ -65,11 +65,15 @@ export default function GameScoreboard() {
 
     function updateGame(updateData: UpdateData<Game>) {
         updateDoc(gameRef, updateData)
-            .then((value) => console.log(`updateDoc -> ${value}`))
+            .then(
+                (value) => console.log(`updateGame fulfilled -> ${value}`),
+                (value) => console.log(`updateGame rejected -> ${value}`)
+            )
             .catch((e) => console.log(e));
     }
 
     function deleteGame() {
+        setDeleteLoading(true);
         deleteDoc(gameRef)
             .then(() => {
                 navigateTo(NavDests.games.list);
@@ -96,7 +100,23 @@ export default function GameScoreboard() {
             });
     }
 
-    function updatePlayer(id: string, updateData: UpdateData<Player>) {}
+    function deletePlayer(id: string) {
+        setDeleteLoading(true);
+        deleteDoc(doc(playersRef, id)).finally(() => {
+            setDeleteLoading(false);
+        });
+    }
+
+    function updatePlayer(id: string, updateData: UpdateData<Player>) {
+        updateDoc(doc(playersRef, id), updateData)
+            .then(
+                (value) => console.log(`updatePlayer fulfilled -> ${value}`),
+                (value) => console.log(`updatePlayer rejected -> ${value}`)
+            )
+            .catch((e) => console.log(e));
+    }
+
+    const inFlux = gameError !== undefined || gameLoading || deleteLoading;
 
     return (
         <Box sx={{ pt: 4, pb: 2 }}>
@@ -104,29 +124,46 @@ export default function GameScoreboard() {
                 direction="row"
                 justifyContent="space-between"
                 alignItems="center"
+                spacing={3}
             >
-                <Typography sx={{ mx: 1 }} variant="h4">
-                    {gameError && `Game Error! ${JSON.stringify(gameError)}`}
-                    {gameLoading && "Loading..."}
-                    {deleteLoading && "Deleting..."}
-                    {game && `Game: ${game.name}`}
-                </Typography>
+                {inFlux && (
+                    <Typography sx={{ mx: 1 }} variant="h4">
+                        {gameError &&
+                            `Game Error! ${JSON.stringify(gameError)}`}
+                        {gameLoading && "Loading..."}
+                        {deleteLoading && "Deleting..."}
+                    </Typography>
+                )}
                 {game && (
-                    <Button
-                        variant="contained"
-                        startIcon={<DeleteIcon />}
-                        color="error"
-                        onClick={() => {
-                            setShowConfirmDelete(true);
-                        }}
-                    >
-                        Delete
-                    </Button>
+                    <React.Fragment>
+                        <BigTitleInput
+                            disabled={inFlux}
+                            defaultValue={game.name}
+                            bigness="h3"
+                            onChange={(event) => {
+                                updateGame({ name: event.target.value });
+                            }}
+                        />
+                        <Button
+                            variant="contained"
+                            startIcon={<DeleteIcon />}
+                            color="error"
+                            onClick={() => {
+                                setShowConfirmDelete(true);
+                            }}
+                        >
+                            Delete Game
+                        </Button>
+                    </React.Fragment>
                 )}
             </Stack>
             {game && <GameContent data={game} onUpdate={updateGame} />}
             {players && (
-                <PlayerList players={players} onUpdatePlayer={updatePlayer} />
+                <PlayerList
+                    players={players}
+                    onUpdatePlayer={updatePlayer}
+                    deletePlayer={deletePlayer}
+                />
             )}
             {pilotShips && (
                 <React.Fragment>
@@ -161,20 +198,8 @@ function GameContent(props: GameContentProps) {
             sx={{ mt: 2 }}
             alignItems="stretch"
             direction="row"
-            justifyContent="space-between"
+            justifyContent="center"
         >
-            <Grid item xs="auto">
-                <Paper sx={paperSx}>
-                    <TextField
-                        variant="filled"
-                        label="Game Label"
-                        value={gameData.name}
-                        onChange={(event) => {
-                            onUpdate({ name: event.target.value });
-                        }}
-                    />
-                </Paper>
-            </Grid>
             <Grid item xs="auto">
                 <Paper sx={paperSx}>
                     <TurnCounter data={gameData} onUpdate={onUpdate} />
