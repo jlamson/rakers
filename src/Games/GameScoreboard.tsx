@@ -1,12 +1,4 @@
-import {
-    Box,
-    Stack,
-    Typography,
-    Button,
-    Grid,
-    Paper,
-    TextField,
-} from "@mui/material";
+import { Box, Stack, Typography, Button, Grid, Paper } from "@mui/material";
 import {
     addDoc,
     collection,
@@ -48,7 +40,8 @@ export default function GameScoreboard() {
         getFirestore(),
         "pilotShips"
     ).withConverter(pilotShipConverter);
-    const [pilotShips, pilotShipsLoading, pilotShipsError] =
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [pilotShips, _pilotShipsLoading, _pilotShipsError] =
         useCollectionData(pilotShipsRef);
 
     const playersRef = collection(
@@ -57,7 +50,8 @@ export default function GameScoreboard() {
         id,
         "players"
     ).withConverter(playerConverter);
-    const [players, playersLoading, playersError] =
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [players, _playersLoading, _playersError] =
         useCollectionData(playersRef);
 
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);

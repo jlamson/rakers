@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import GameList from "../Games/GameList";
 import { NavContext } from "./NavContext";
 import NavDests, { Route } from "./NavDests";
-import { Box, Container } from "@mui/material";
+import { Container } from "@mui/material";
 import PilotShipList from "../PilotShips/PilotShipList";
 import AddEditPilotShip from "../PilotShips/AddEditPilotShip";
 import GameScoreboard from "../Games/GameScoreboard";

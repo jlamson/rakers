@@ -1,7 +1,6 @@
 import {
     DocumentData,
     DocumentReference,
-    Firestore,
     FirestoreDataConverter,
     QueryDocumentSnapshot,
     SnapshotOptions,

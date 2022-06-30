@@ -6,7 +6,7 @@ import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import CasinoIcon from "@mui/icons-material/Casino";
 import NavDests from "./NavDests";
 import { NavContext } from "./NavContext";
-import { Box, List } from "@mui/material";
+import { List } from "@mui/material";
 
 const DrawerNavItems = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

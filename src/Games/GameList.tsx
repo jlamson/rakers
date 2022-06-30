@@ -101,7 +101,7 @@ const GameListItem = (props: FirebaseDataProps<Game>) => {
         <ListItemButton
             onClick={() => {
                 const gameId = game.id;
-                if (gameId != undefined) {
+                if (gameId !== undefined) {
                     navigateTo(NavDests.games.forId(gameId));
                 }
             }}

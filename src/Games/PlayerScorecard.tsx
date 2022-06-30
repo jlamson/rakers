@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React from "react";
 import {
     Grid,
     Paper,
@@ -7,10 +7,6 @@ import {
     Typography,
     Slider,
     TextField,
-    List,
-    ListItem,
-    ListItemText,
-    Input,
 } from "@mui/material";
 import { UpdateData } from "firebase/firestore";
 import BigTitleInput from "../Components/BigTitleInput";
@@ -19,7 +15,6 @@ import SkillsBox from "../Components/SkillsBox";
 import { Player } from "../Data/Player";
 import Skills from "../Data/Skills";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ConfirmDeleteDialog from "../Components/ConfirmDeleteDialog";
 import { replaceAtIndex } from "../Utils/array";
 import CheckableSubList from "../Components/CheckableSubList";
 import CargoList from "../Components/CargoList";

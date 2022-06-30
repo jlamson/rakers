@@ -38,6 +38,7 @@ export default function BigTitleInput(props: BigTitleInputProps) {
             fullWidth={fullWidth}
             margin={margin}
             size={size}
+            bigness={bigness}
             {...rest}
         />
     );
