@@ -14,6 +14,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import Router from "./Router";
 import DrawerNavItems from "./DrawerNavItems";
 import { NavContext } from "./NavContext";
+import Drawer from "@mui/material/Drawer";
 
 const drawerWidth: number = 240;
 
@@ -39,31 +40,31 @@ const AppBar = styled(MuiAppBar, {
     }),
 }));
 
-const Drawer = styled(MuiDrawer, {
-    shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-    "& .MuiDrawer-paper": {
-        position: "relative",
-        whiteSpace: "nowrap",
-        width: drawerWidth,
-        transition: theme.transitions.create("width", {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-        boxSizing: "border-box",
-        ...(!open && {
-            overflowX: "hidden",
-            transition: theme.transitions.create("width", {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.leavingScreen,
-            }),
-            width: theme.spacing(7),
-            [theme.breakpoints.up("sm")]: {
-                width: theme.spacing(9),
-            },
-        }),
-    },
-}));
+// const Drawer = styled(MuiDrawer, {
+//     shouldForwardProp: (prop) => prop !== "open",
+// })(({ theme, open }) => ({
+//     "& .MuiDrawer-paper": {
+//         position: "relative",
+//         whiteSpace: "nowrap",
+//         width: drawerWidth,
+//         transition: theme.transitions.create("width", {
+//             easing: theme.transitions.easing.sharp,
+//             duration: theme.transitions.duration.enteringScreen,
+//         }),
+//         boxSizing: "border-box",
+//         ...(!open && {
+//             overflowX: "hidden",
+//             transition: theme.transitions.create("width", {
+//                 easing: theme.transitions.easing.sharp,
+//                 duration: theme.transitions.duration.leavingScreen,
+//             }),
+//             width: theme.spacing(5),
+//             [theme.breakpoints.up("sm")]: {
+//                 width: "54px",
+//             },
+//         }),
+//     },
+// }));
 
 const mdTheme = createTheme();
 
@@ -73,6 +74,19 @@ function NavContainer() {
     const [isDrawerOpen, setDrawerOpen] = useState(true);
     const toggleDrawer = () => {
         setDrawerOpen(!isDrawerOpen);
+    };
+    const closeDrawerIfNeeded = (
+        event: React.KeyboardEvent | React.MouseEvent
+    ) => {
+        if (
+            event.type === "keydown" &&
+            ((event as React.KeyboardEvent).key === "Tab" ||
+                (event as React.KeyboardEvent).key === "Shift")
+        ) {
+            return;
+        }
+
+        setDrawerOpen(false);
     };
 
     return (
@@ -91,7 +105,7 @@ function NavContainer() {
                             aria-label="open drawer"
                             onClick={toggleDrawer}
                             sx={{
-                                marginRight: "36px",
+                                marginRight: "24px",
                                 ...(isDrawerOpen && { display: "none" }),
                             }}
                         >
@@ -108,23 +122,36 @@ function NavContainer() {
                         </Typography>
                     </Toolbar>
                 </AppBar>
-                <Drawer variant="permanent" open={isDrawerOpen}>
-                    <Toolbar
-                        sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "flex-end",
-                            px: [1],
-                        }}
+                <Drawer
+                    anchor="left"
+                    variant="temporary"
+                    open={isDrawerOpen}
+                    onClose={closeDrawerIfNeeded}
+                    ModalProps={{
+                        keepMounted: true,
+                    }}
+                >
+                    <Box
+                        sx={{ width: drawerWidth }}
+                        role="presentation"
+                        onClick={closeDrawerIfNeeded}
+                        onKeyDown={closeDrawerIfNeeded}
                     >
-                        <IconButton onClick={toggleDrawer}>
-                            <ChevronLeftIcon />
-                        </IconButton>
-                    </Toolbar>
-                    <Divider />
-                    <List component="nav">
+                        <Toolbar
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "flex-end",
+                                px: [1],
+                            }}
+                        >
+                            <IconButton onClick={toggleDrawer}>
+                                <ChevronLeftIcon />
+                            </IconButton>
+                        </Toolbar>
+                        <Divider />
                         <DrawerNavItems />
-                    </List>
+                    </Box>
                 </Drawer>
                 <Box
                     component="main"

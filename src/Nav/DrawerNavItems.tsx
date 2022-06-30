@@ -6,13 +6,14 @@ import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import CasinoIcon from "@mui/icons-material/Casino";
 import NavDests from "./NavDests";
 import { NavContext } from "./NavContext";
+import { Box, List } from "@mui/material";
 
 const DrawerNavItems = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_currentDest, navigateTo] = React.useContext(NavContext);
     const iconSx = { "min-width": "36px" };
     return (
-        <React.Fragment>
+        <List component="nav">
             <ListItemButton
                 onClick={() => {
                     navigateTo(NavDests.games.list);
@@ -33,7 +34,7 @@ const DrawerNavItems = () => {
                 </ListItemIcon>
                 <ListItemText primary="Pilots/Ships" />
             </ListItemButton>
-        </React.Fragment>
+        </List>
     );
 };
 
