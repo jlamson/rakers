@@ -29,11 +29,6 @@ interface PlayerScorecardProps {
 
 export default function PlayerScorecard(props: PlayerScorecardProps) {
     const { playerId, player, onUpdatePlayer } = props;
-    const paperSx = {
-        p: 2,
-        display: "flex",
-        flexDirection: "column",
-    };
 
     function toggleSkill(skill: Skills) {
         const oldSkills = player.skills;
@@ -46,62 +41,51 @@ export default function PlayerScorecard(props: PlayerScorecardProps) {
         }
     }
 
-    const smallCardProps = {
-        xs: 12,
-        sm: 6,
-        lg: 3,
-    };
-    const bigCardProps = {
-        xs: 12,
-        sm: 6,
-    };
+    const columnGridItemProps = { sm: 12, md: 6, lg: 4 };
+    const columnStackProps = { spacing: 1 };
+    const paperSx = { p: 2 };
 
     return (
         <Grid container sx={{ mt: 1, mb: 2 }} spacing={2}>
             <Grid item xs={12}>
                 <PlayerHeader {...props} />
             </Grid>
-            <Grid item {...smallCardProps}>
-                <Paper sx={paperSx}>
-                    <PilotSection {...props} />
-                </Paper>
+            <Grid item {...columnGridItemProps}>
+                <Stack {...columnStackProps}>
+                    <Paper sx={paperSx}>
+                        <CrebitsBlock {...props} />
+                    </Paper>
+                    <Paper sx={paperSx}>
+                        <PilotSection {...props} />
+                    </Paper>
+                    <Paper sx={paperSx}>
+                        <Grid container>
+                            <SkillsBox
+                                title="Skills"
+                                skills={player.skills}
+                                toggleSkill={toggleSkill}
+                            />
+                        </Grid>
+                    </Paper>
+                    <Paper sx={paperSx}>
+                        <CrewSection {...props} />
+                    </Paper>
+                </Stack>
             </Grid>
-            <Grid item {...smallCardProps}>
-                <Paper sx={paperSx}>
-                    <ShipSection {...props} />
-                </Paper>
+            <Grid item {...columnGridItemProps}>
+                <Stack {...columnStackProps}>
+                    <Paper sx={paperSx}>
+                        <ShipSection {...props} />
+                    </Paper>
+                    <Paper sx={paperSx}>
+                        <EquipmentSection {...props} />
+                    </Paper>
+                    <Paper sx={paperSx}>
+                        <HoldSection {...props} />
+                    </Paper>
+                </Stack>
             </Grid>
-            <Grid item {...smallCardProps}>
-                <Paper sx={paperSx}>
-                    <CrebitsBlock {...props} />
-                </Paper>
-            </Grid>
-            <Grid item {...smallCardProps}>
-                <Paper sx={paperSx}>
-                    <Grid container>
-                        <SkillsBox
-                            skills={player.skills}
-                            toggleSkill={toggleSkill}
-                        />
-                    </Grid>
-                </Paper>
-            </Grid>
-            <Grid item {...bigCardProps}>
-                <Paper sx={paperSx}>
-                    <CrewSection {...props} />
-                </Paper>
-            </Grid>
-            <Grid item {...bigCardProps}>
-                <Paper sx={paperSx}>
-                    <EquipmentSection {...props} />
-                </Paper>
-            </Grid>
-            <Grid item {...bigCardProps}>
-                <Paper sx={paperSx}>
-                    <HoldSection {...props} />
-                </Paper>
-            </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} lg={4}>
                 <Paper sx={paperSx}>
                     <ReputationSection {...props} />
                 </Paper>

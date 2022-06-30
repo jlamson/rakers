@@ -3,23 +3,24 @@ import { Grid, ToggleButton, Typography } from "@mui/material";
 import Skills from "../Data/Skills";
 
 interface SkillsBoxProps {
+    title: string;
     skills: Skills[];
     toggleSkill: (skill: Skills) => void;
 }
 
 export default function SkillsBox(props: SkillsBoxProps) {
-    const { skills, toggleSkill } = props;
+    const { title, skills, toggleSkill } = props;
 
     return (
         <React.Fragment>
-            <Typography sx={{ ml: 1, mt: 2 }} variant="overline">
-                Starting Skills
+            <Typography sx={{ ml: 1 }} variant="overline">
+                {title}
             </Typography>
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
                 <SkillToggleButton
                     selectedSkills={skills}
                     skill={Skills.QUICK_THINK}
-                    displaySkill={"Quick Think"}
+                    displaySkill={"QuickThink"}
                     toggleSkill={toggleSkill}
                 />
                 <SkillToggleButton

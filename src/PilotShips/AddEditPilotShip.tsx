@@ -187,6 +187,7 @@ function PilotForm(props: PilotShipFormProps) {
             </Grid>
             <Grid item xs={12} sx={{ mt: 2 }}>
                 <SkillsBox
+                    title="Starting Skills"
                     skills={pilotShip.startingSkills}
                     toggleSkill={toggleSkill}
                 />
