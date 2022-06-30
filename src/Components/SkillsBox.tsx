@@ -73,7 +73,7 @@ function SkillToggleButton(props: SkillToggleButtonProps) {
     } = props;
     const selected = pilotSkills.includes(skill);
     return (
-        <Grid item xs={6} sm={4} lg={3} xl={2}>
+        <Grid item xs={6} sm={4}>
             <ToggleButton
                 fullWidth
                 color="secondary"

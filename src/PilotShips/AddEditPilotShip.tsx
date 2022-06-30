@@ -54,37 +54,35 @@ export default function AddEditPilotShip() {
     }
 
     return (
-        <Box sx={{ m: 3, py: 2 }}>
-            <Stack spacing={1}>
-                <Stack direction="row" justifyContent="space-between">
-                    <Typography sx={{ ml: 2 }} variant="h4">
-                        {error && `Error! ${JSON.stringify(error)}`}
-                        {loading && "Loading..."}
-                        {deleteLoading && "Deleting..."}
-                        {pilotShip &&
-                            `Edit ${pilotShip.name} & ${pilotShip.ship.name}`}
-                    </Typography>
-                    {pilotShip && (
-                        <Button
-                            sx={{ mr: 3 }}
-                            variant="contained"
-                            startIcon={<DeleteIcon />}
-                            color="error"
-                            onClick={() => {
-                                setShowConfirmDelete(true);
-                            }}
-                        >
-                            Delete
-                        </Button>
-                    )}
-                </Stack>
+        <Box sx={{ pt: 4, pb: 2 }}>
+            <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+            >
+                <Typography sx={{ mx: 1 }} variant="h4">
+                    {error && `Error! ${JSON.stringify(error)}`}
+                    {loading && "Loading..."}
+                    {deleteLoading && "Deleting..."}
+                    {pilotShip &&
+                        `Edit ${pilotShip.name} & ${pilotShip.ship.name}`}
+                </Typography>
                 {pilotShip && (
-                    <PilotShipForm
-                        data={pilotShip}
-                        onUpdate={updatePilotShip}
-                    />
+                    <Button
+                        variant="contained"
+                        startIcon={<DeleteIcon />}
+                        color="error"
+                        onClick={() => {
+                            setShowConfirmDelete(true);
+                        }}
+                    >
+                        Delete
+                    </Button>
                 )}
             </Stack>
+            {pilotShip && (
+                <PilotShipForm data={pilotShip} onUpdate={updatePilotShip} />
+            )}
             <ConfirmDeleteDialog
                 open={showConfirmDelete}
                 onCancel={() => {
@@ -109,28 +107,23 @@ function PilotShipForm(props: PilotShipFormProps) {
     };
 
     return (
-        <Container maxWidth="lg" sx={{ py: 2 }}>
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={7}>
-                    <Paper sx={paperSx}>
-                        <PilotForm data={pilotShip} onUpdate={onUpdate} />
-                    </Paper>
-                </Grid>
-                <Grid item xs={12} md={5}>
-                    <Paper sx={paperSx}>
-                        <ShipForm data={pilotShip} onUpdate={onUpdate} />
-                    </Paper>
-                </Grid>
-                <Grid item xs={12}>
-                    <Paper sx={paperSx}>
-                        <StartingRepSliders
-                            data={pilotShip}
-                            onUpdate={onUpdate}
-                        />
-                    </Paper>
-                </Grid>
+        <Grid container spacing={3} sx={{ mt: 1, pb: 3 }}>
+            <Grid item xs={12} md={7}>
+                <Paper sx={paperSx}>
+                    <PilotForm data={pilotShip} onUpdate={onUpdate} />
+                </Paper>
             </Grid>
-        </Container>
+            <Grid item xs={12} md={5}>
+                <Paper sx={paperSx}>
+                    <ShipForm data={pilotShip} onUpdate={onUpdate} />
+                </Paper>
+            </Grid>
+            <Grid item xs={12}>
+                <Paper sx={paperSx}>
+                    <StartingRepSliders data={pilotShip} onUpdate={onUpdate} />
+                </Paper>
+            </Grid>
+        </Grid>
     );
 }
 

@@ -71,7 +71,7 @@ const mdTheme = createTheme();
 function NavContainer() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [currentDest, _navigateTo] = useContext(NavContext);
-    const [isDrawerOpen, setDrawerOpen] = useState(true);
+    const [isDrawerOpen, setDrawerOpen] = useState(false);
     const toggleDrawer = () => {
         setDrawerOpen(!isDrawerOpen);
     };

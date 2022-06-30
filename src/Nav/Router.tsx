@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import GameList from "../Games/GameList";
 import { NavContext } from "./NavContext";
 import NavDests, { Route } from "./NavDests";
-import { Box } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import PilotShipList from "../PilotShips/PilotShipList";
 import AddEditPilotShip from "../PilotShips/AddEditPilotShip";
 import GameScoreboard from "../Games/GameScoreboard";
@@ -29,9 +29,9 @@ const Router = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [currentDest, _navigateTo] = useContext(NavContext);
     return (
-        <Box>
+        <Container maxWidth="lg">
             <React.Fragment>{getScreen(currentDest)}</React.Fragment>
-        </Box>
+        </Container>
     );
 };
 
