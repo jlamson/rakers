@@ -26,6 +26,11 @@ export type Player = {
     cargo: Cargo[];
 };
 
+export interface Equippable {
+    text: string;
+    isEquipped: boolean;
+}
+
 export type Crew = {
     text: string;
     isEquipped: boolean;

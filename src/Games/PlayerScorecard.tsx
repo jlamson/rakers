@@ -11,18 +11,18 @@ import {
     ListItem,
     ListItemText,
     Input,
-    IconButton,
-    Checkbox,
 } from "@mui/material";
 import { UpdateData } from "firebase/firestore";
 import BigTitleInput from "../Components/BigTitleInput";
 import { RepSlider } from "../Components/RepSlider";
 import SkillsBox from "../Components/SkillsBox";
-import { Crew, Player } from "../Data/Player";
+import { Player } from "../Data/Player";
 import Skills from "../Data/Skills";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ConfirmDeleteDialog from "../Components/ConfirmDeleteDialog";
-import { count } from "../Utils/array";
+import { replaceAtIndex } from "../Utils/array";
+import CheckableSubList from "../Components/CheckableSubList";
+import CargoList from "../Components/CargoList";
 
 interface PlayerScorecardProps {
     playerId: string;
@@ -223,236 +223,84 @@ function CrebitsBlock(props: PlayerScorecardProps) {
 
 function CrewSection(props: PlayerScorecardProps) {
     const { playerId, player, onUpdatePlayer } = props;
-    const [pendingCrew, setPendingCrew] = useState("");
-    const [pendingDeleteIndex, setPendingDeleteIndex] = useState(-1);
-    const equippedCount = useMemo(
-        () => count(player.crew, (it) => it.isEquipped),
-        [player.crew]
-    );
     return (
-        <React.Fragment>
-            <Typography sx={{ mb: 1 }} variant="h5">
-                Crew: {equippedCount} / {player.pilotShip.ship.crewSlots}
-            </Typography>
-            <List dense disablePadding>
-                {player.crew.map((c, i) => (
-                    <ListItem
-                        key={`${i}-${c.text}`}
-                        disableGutters
-                        secondaryAction={
-                            <IconButton
-                                edge="end"
-                                onClick={() => {
-                                    setPendingDeleteIndex(i);
-                                }}
-                            >
-                                <DeleteIcon />
-                            </IconButton>
-                        }
-                    >
-                        <Checkbox
-                            edge="start"
-                            checked={c.isEquipped}
-                            onChange={(event, checked) => {
-                                onUpdatePlayer(playerId, {
-                                    crew: player.crew.map<Crew>((it, j, _) => {
-                                        if (j === i) {
-                                            return {
-                                                ...it,
-                                                isEquipped: checked,
-                                            };
-                                        } else {
-                                            return it;
-                                        }
-                                    }),
-                                });
-                            }}
-                        />
-                        <ListItemText primary={c.text} />
-                    </ListItem>
-                ))}
-            </List>
-            <Stack sx={{ mt: 2 }} spacing={1} direction="row" alignItems="top">
-                <TextField
-                    fullWidth
-                    margin="dense"
-                    size="small"
-                    variant="filled"
-                    label="New Crew"
-                    multiline
-                    value={pendingCrew}
-                    onChange={(event) => {
-                        setPendingCrew(event.target.value);
-                    }}
-                />
-                <Button
-                    disabled={pendingCrew === ""}
-                    variant="text"
-                    size="small"
-                    onClick={() => {
-                        onUpdatePlayer(playerId, {
-                            crew: [
-                                ...player.crew,
-                                {
-                                    text: pendingCrew,
-                                    isEquipped: false,
-                                },
-                            ],
-                        });
-                        setPendingCrew("");
-                    }}
-                >
-                    Add
-                </Button>
-                <ConfirmDeleteDialog
-                    open={pendingDeleteIndex >= 0}
-                    onCancel={() => {
-                        setPendingDeleteIndex(-1);
-                    }}
-                    onConfirmDelete={() => {
-                        onUpdatePlayer(playerId, {
-                            crew: player.crew.filter(
-                                (it, i, all) => i !== pendingDeleteIndex
-                            ),
-                        });
-                        setPendingDeleteIndex(-1);
-                    }}
-                />
-            </Stack>
-        </React.Fragment>
+        <CheckableSubList
+            label="Crew"
+            list={player.crew}
+            max={player.pilotShip.ship.crewSlots}
+            onDeleteIndex={(index) => {
+                onUpdatePlayer(playerId, {
+                    crew: player.crew.filter((it, i, all) => i !== index),
+                });
+            }}
+            onCheckChanged={(index, checked) => {
+                onUpdatePlayer(playerId, {
+                    crew: replaceAtIndex(player.crew, index, (old) => ({
+                        ...old,
+                        isEquipped: checked,
+                    })),
+                });
+            }}
+            onAddNew={(item) => {
+                onUpdatePlayer(playerId, {
+                    crew: [...player.crew, item],
+                });
+            }}
+        />
     );
 }
 
 function EquipmentSection(props: PlayerScorecardProps) {
     const { playerId, player, onUpdatePlayer } = props;
-    const [pendingEquipment, setPendingEquipment] = useState("");
     return (
-        <React.Fragment>
-            <Typography sx={{ mb: 1 }} variant="h5">
-                Equipment: {player.equipment.length} /{" "}
-                {player.pilotShip.ship.equipmentSlots}
-            </Typography>
-            <List dense disablePadding>
-                {player.equipment.map((eq, i) => (
-                    <ListItem key={`${i}-${eq.text}`} disableGutters>
-                        <ListItemText primary={eq.text} />
-                    </ListItem>
-                ))}
-            </List>
-            <Stack sx={{ mt: 2 }} spacing={1} direction="row" alignItems="top">
-                <TextField
-                    fullWidth
-                    margin="dense"
-                    size="small"
-                    variant="filled"
-                    label="New Equipment"
-                    multiline
-                    value={pendingEquipment}
-                    onChange={(event) => {
-                        setPendingEquipment(event.target.value);
-                    }}
-                />
-                <Button
-                    disabled={pendingEquipment === ""}
-                    variant="text"
-                    size="small"
-                    onClick={() => {
-                        onUpdatePlayer(playerId, {
-                            equipment: [
-                                ...player.equipment,
-                                {
-                                    text: pendingEquipment,
-                                    isEquipped: false,
-                                },
-                            ],
-                        });
-                        setPendingEquipment("");
-                    }}
-                >
-                    Add
-                </Button>
-            </Stack>
-        </React.Fragment>
+        <CheckableSubList
+            label="Equipment"
+            list={player.equipment}
+            max={player.pilotShip.ship.equipmentSlots}
+            onDeleteIndex={(index) => {
+                onUpdatePlayer(playerId, {
+                    equipment: player.equipment.filter(
+                        (it, i, all) => i !== index
+                    ),
+                });
+            }}
+            onCheckChanged={(index, checked) => {
+                onUpdatePlayer(playerId, {
+                    equipment: replaceAtIndex(
+                        player.equipment,
+                        index,
+                        (old) => ({
+                            ...old,
+                            isEquipped: checked,
+                        })
+                    ),
+                });
+            }}
+            onAddNew={(item) => {
+                onUpdatePlayer(playerId, {
+                    equipment: [...player.equipment, item],
+                });
+            }}
+        />
     );
 }
 
 function HoldSection(props: PlayerScorecardProps) {
     const { playerId, player, onUpdatePlayer } = props;
 
-    const [pendingHold, setPendingHold] = useState("");
-    const [pendingHoldAmount, setPendingHoldAmount] = useState(0);
-
-    const canAddHold = useMemo(
-        () => pendingHold !== "" && pendingHoldAmount > 0,
-        [pendingHold, pendingHoldAmount]
-    );
-    const holdAmount = useMemo(
-        () =>
-            player.cargo.reduce<number>(
-                (acc, cur, i, all) => acc + cur.holdSize,
-                0
-            ),
-        [player.cargo]
-    );
     return (
-        <React.Fragment>
-            <Typography sx={{ mb: 1 }} variant="h5">
-                The Hold: {holdAmount} / {player.pilotShip.ship.holdSlots}
-            </Typography>
-            <List dense disablePadding>
-                {player.cargo.map((c, i) => (
-                    <ListItem key={`${i}-${c.text}`} disableGutters>
-                        <ListItemText primary={`[${c.holdSize}] ${c.text}`} />
-                    </ListItem>
-                ))}
-            </List>
-            <Stack sx={{ mt: 2 }} spacing={1} direction="row" alignItems="top">
-                <TextField
-                    fullWidth
-                    margin="dense"
-                    size="small"
-                    variant="filled"
-                    label="New Cargo"
-                    multiline
-                    value={pendingHold}
-                    onChange={(event) => {
-                        setPendingHold(event.target.value);
-                    }}
-                />
-                <Input
-                    value={pendingHoldAmount}
-                    size="small"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setPendingHoldAmount(parseInt(e.target.value));
-                    }}
-                    inputProps={{
-                        step: 10,
-                        min: 0,
-                        type: "number",
-                    }}
-                />
-                <Button
-                    disabled={!canAddHold}
-                    variant="text"
-                    size="small"
-                    onClick={() => {
-                        onUpdatePlayer(playerId, {
-                            cargo: [
-                                ...player.cargo,
-                                {
-                                    text: pendingHold,
-                                    holdSize: pendingHoldAmount,
-                                },
-                            ],
-                        });
-                        setPendingHold("");
-                        setPendingHoldAmount(0);
-                    }}
-                >
-                    Add
-                </Button>
-            </Stack>
-        </React.Fragment>
+        <CargoList
+            list={player.cargo}
+            max={player.pilotShip.ship.holdSlots}
+            onDeleteIndex={(index) => {
+                onUpdatePlayer(playerId, {
+                    cargo: player.cargo.filter((it, i, all) => i !== index),
+                });
+            }}
+            onAddNew={(item) => {
+                onUpdatePlayer(playerId, { cargo: [...player.cargo, item] });
+            }}
+        />
     );
 }
 
