@@ -10,6 +10,7 @@ import { NavContext } from "./NavContext";
 const DrawerNavItems = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_currentDest, navigateTo] = React.useContext(NavContext);
+    const iconSx = { "min-width": "36px" };
     return (
         <React.Fragment>
             <ListItemButton
@@ -17,7 +18,7 @@ const DrawerNavItems = () => {
                     navigateTo(NavDests.games.list);
                 }}
             >
-                <ListItemIcon>
+                <ListItemIcon sx={iconSx}>
                     <CasinoIcon />
                 </ListItemIcon>
                 <ListItemText primary="Games" />
@@ -27,7 +28,7 @@ const DrawerNavItems = () => {
                     navigateTo(NavDests.pilotShips.list);
                 }}
             >
-                <ListItemIcon>
+                <ListItemIcon sx={iconSx}>
                     <RocketLaunchIcon />
                 </ListItemIcon>
                 <ListItemText primary="Pilots/Ships" />
