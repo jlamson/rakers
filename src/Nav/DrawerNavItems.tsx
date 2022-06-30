@@ -11,7 +11,7 @@ import { Box, List } from "@mui/material";
 const DrawerNavItems = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_currentDest, navigateTo] = React.useContext(NavContext);
-    const iconSx = { "min-width": "36px" };
+    const iconSx = { minWidth: "36px" };
     return (
         <List component="nav">
             <ListItemButton

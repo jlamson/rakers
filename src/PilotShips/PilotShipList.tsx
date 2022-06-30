@@ -81,7 +81,7 @@ function PilotShipList() {
                                 addNewPilot();
                             }}
                         >
-                            <ListItemIcon sx={{ "min-width": "36px" }}>
+                            <ListItemIcon sx={{ minWidth: "36px" }}>
                                 <AddIcon />
                             </ListItemIcon>
                             <ListItemText primary="Add New Pilot" />

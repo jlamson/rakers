@@ -279,8 +279,8 @@ function EquipmentSection(props: PlayerScorecardProps) {
                 {player.pilotShip.ship.equipmentSlots}
             </Typography>
             <List dense disablePadding>
-                {player.equipment.map((eq) => (
-                    <ListItem disableGutters>
+                {player.equipment.map((eq, i) => (
+                    <ListItem key={`${i}-${eq.text}`} disableGutters>
                         <ListItemText primary={eq.text} />
                     </ListItem>
                 ))}
@@ -346,8 +346,8 @@ function HoldSection(props: PlayerScorecardProps) {
                 The Hold: {holdAmount} / {player.pilotShip.ship.holdSlots}
             </Typography>
             <List dense disablePadding>
-                {player.cargo.map((c) => (
-                    <ListItem disableGutters>
+                {player.cargo.map((c, i) => (
+                    <ListItem key={`${i}-${c.text}`} disableGutters>
                         <ListItemText primary={`[${c.holdSize}] ${c.text}`} />
                     </ListItem>
                 ))}

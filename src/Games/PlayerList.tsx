@@ -22,7 +22,7 @@ export function PlayerList(props: PlayerListProps) {
                 const safeId = player.id;
                 if (safeId === undefined) return null;
                 return (
-                    <React.Fragment>
+                    <React.Fragment key={player.id}>
                         <PlayerScorecard
                             playerId={safeId}
                             player={player}

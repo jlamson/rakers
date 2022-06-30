@@ -59,7 +59,10 @@ export function AddNewPlayerForm(props: AddNewPlayerFormProps) {
                             }}
                         >
                             {pilotShips.map((pilotShip) => (
-                                <MenuItem value={pilotShip.id}>
+                                <MenuItem
+                                    key={pilotShip.id}
+                                    value={pilotShip.id}
+                                >
                                     {`${pilotShip.name} / ${pilotShip.ship.name}`}
                                 </MenuItem>
                             ))}
