@@ -35,6 +35,7 @@ export function PlayerList(props: PlayerListProps) {
             })}
             <ConfirmDeleteDialog
                 open={pendingDeleteId !== ""}
+                entityName="Player"
                 onCancel={() => {
                     setPendingDeleteId("");
                 }}

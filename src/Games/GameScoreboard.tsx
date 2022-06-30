@@ -170,6 +170,7 @@ export default function GameScoreboard() {
             )}
             <ConfirmDeleteDialog
                 open={showConfirmDelete}
+                entityName="Game"
                 onCancel={() => {
                     setShowConfirmDelete(false);
                 }}

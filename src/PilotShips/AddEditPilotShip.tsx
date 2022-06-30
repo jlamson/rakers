@@ -84,6 +84,7 @@ export default function AddEditPilotShip() {
             )}
             <ConfirmDeleteDialog
                 open={showConfirmDelete}
+                entityName="Pilot/Ship"
                 onCancel={() => {
                     setShowConfirmDelete(false);
                 }}
