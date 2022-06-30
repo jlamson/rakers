@@ -99,53 +99,43 @@ export default function GameScoreboard() {
     function updatePlayer(id: string, updateData: UpdateData<Player>) {}
 
     return (
-        <Box sx={{ m: 3, py: 2 }}>
-            <Stack spacing={1}>
-                <Grid container direction="row" justifyContent="space-between">
-                    <Grid item xs justifyContent="start">
-                        <Typography sx={{ ml: 2 }} variant="h4">
-                            {gameError &&
-                                `Game Error! ${JSON.stringify(gameError)}`}
-                            {gameLoading && "Loading..."}
-                            {deleteLoading && "Deleting..."}
-                            {game && `Game: ${game.name}`}
-                        </Typography>
-                    </Grid>
-                    {game && (
-                        <Grid item xs="auto">
-                            <Button
-                                sx={{ mr: 3 }}
-                                variant="contained"
-                                startIcon={<DeleteIcon />}
-                                color="error"
-                                onClick={() => {
-                                    setShowConfirmDelete(true);
-                                }}
-                            >
-                                Delete
-                            </Button>
-                        </Grid>
-                    )}
-                </Grid>
-                {game && <GameContent data={game} onUpdate={updateGame} />}
-                {players && (
-                    <PlayerList
-                        players={players}
-                        onUpdatePlayer={updatePlayer}
-                    />
-                )}
-                {pilotShips && (
-                    <React.Fragment>
-                        <Typography variant="h4" sx={{ mt: 1, pl: 1 }}>
-                            Add New Player
-                        </Typography>
-                        <AddNewPlayerForm
-                            pilotShips={pilotShips}
-                            addNewPlayer={addPlayer}
-                        />
-                    </React.Fragment>
+        <Box sx={{ pt: 4, pb: 2 }}>
+            <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+            >
+                <Typography sx={{ mx: 1 }} variant="h4">
+                    {gameError && `Game Error! ${JSON.stringify(gameError)}`}
+                    {gameLoading && "Loading..."}
+                    {deleteLoading && "Deleting..."}
+                    {game && `Game: ${game.name}`}
+                </Typography>
+                {game && (
+                    <Button
+                        variant="contained"
+                        startIcon={<DeleteIcon />}
+                        color="error"
+                        onClick={() => {
+                            setShowConfirmDelete(true);
+                        }}
+                    >
+                        Delete
+                    </Button>
                 )}
             </Stack>
+            {game && <GameContent data={game} onUpdate={updateGame} />}
+            {players && (
+                <PlayerList players={players} onUpdatePlayer={updatePlayer} />
+            )}
+            {pilotShips && (
+                <React.Fragment>
+                    <AddNewPlayerForm
+                        pilotShips={pilotShips}
+                        addNewPlayer={addPlayer}
+                    />
+                </React.Fragment>
+            )}
             <ConfirmDeleteDialog
                 open={showConfirmDelete}
                 onCancel={() => {
@@ -166,26 +156,30 @@ function GameContent(props: GameContentProps) {
     const paperSx = { p: 2, display: "flex", flexDirection: "column" };
 
     return (
-        <Container maxWidth="lg" sx={{ py: 2 }}>
-            <Grid container spacing={3} alignItems="stretch" direction="row">
-                <Grid item xs="auto">
-                    <Paper sx={paperSx}>
-                        <TextField
-                            variant="filled"
-                            label="Game Label"
-                            value={gameData.name}
-                            onChange={(event) => {
-                                onUpdate({ name: event.target.value });
-                            }}
-                        />
-                    </Paper>
-                </Grid>
-                <Grid item xs="auto">
-                    <Paper sx={paperSx}>
-                        <TurnCounter data={gameData} onUpdate={onUpdate} />
-                    </Paper>
-                </Grid>
+        <Grid
+            container
+            sx={{ mt: 2 }}
+            alignItems="stretch"
+            direction="row"
+            justifyContent="space-between"
+        >
+            <Grid item xs="auto">
+                <Paper sx={paperSx}>
+                    <TextField
+                        variant="filled"
+                        label="Game Label"
+                        value={gameData.name}
+                        onChange={(event) => {
+                            onUpdate({ name: event.target.value });
+                        }}
+                    />
+                </Paper>
             </Grid>
-        </Container>
+            <Grid item xs="auto">
+                <Paper sx={paperSx}>
+                    <TurnCounter data={gameData} onUpdate={onUpdate} />
+                </Paper>
+            </Grid>
+        </Grid>
     );
 }

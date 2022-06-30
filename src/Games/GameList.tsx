@@ -8,11 +8,13 @@ import {
 } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import {
+    Box,
     List,
     ListItemButton,
     ListItemIcon,
     ListItemText,
     Paper,
+    Typography,
 } from "@mui/material";
 import { useContext } from "react";
 import { NavContext } from "../Nav/NavContext";
@@ -56,32 +58,36 @@ function GameList() {
     }
 
     return (
-        <Paper sx={{ m: 4, px: 4, py: 2 }}>
-            <h1>All Games</h1>
-            {error && <p>Error! {JSON.stringify(error)}</p>}
-            {(loading || isAddLoading) && <p>Loading...</p>}
-            {values && (
-                <List>
-                    {values.map((game) => (
-                        <GameListItem
-                            key={game.id}
-                            data={game}
-                            onUpdate={doNothing}
-                        />
-                    ))}
-                    <ListItemButton
-                        onClick={() => {
-                            startNewGame();
-                        }}
-                    >
-                        <ListItemIcon>
-                            <AddIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Start New Game" />
-                    </ListItemButton>
-                </List>
-            )}
-        </Paper>
+        <Box sx={{ pt: 4, pb: 2 }}>
+            <Typography sx={{ mx: 1 }} variant="h4">
+                {error && `Error! ${JSON.stringify(error)}`}
+                {(loading || isAddLoading) && "Loading..."}
+                {values && "All Games"}
+            </Typography>
+            <Paper sx={{ m: 1, mt: 3 }}>
+                {values && (
+                    <List>
+                        {values.map((game) => (
+                            <GameListItem
+                                key={game.id}
+                                data={game}
+                                onUpdate={doNothing}
+                            />
+                        ))}
+                        <ListItemButton
+                            onClick={() => {
+                                startNewGame();
+                            }}
+                        >
+                            <ListItemIcon>
+                                <AddIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Start New Game" />
+                        </ListItemButton>
+                    </List>
+                )}
+            </Paper>
+        </Box>
     );
 }
 

@@ -8,7 +8,7 @@ export function TurnCounter(props: GameContentProps) {
     const { data: gameData, onUpdate } = props;
 
     return (
-        <Stack direction="row" justifyContent="space-evenly">
+        <Stack height="100%" direction="row" justifyContent="space-evenly">
             <IconButton
                 disabled={gameData.turn <= 0}
                 onClick={() => {

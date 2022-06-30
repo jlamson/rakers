@@ -7,11 +7,13 @@ import {
 } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import {
+    Box,
     List,
     ListItemButton,
     ListItemIcon,
     ListItemText,
     Paper,
+    Typography,
 } from "@mui/material";
 import { useContext } from "react";
 import { NavContext } from "../Nav/NavContext";
@@ -58,31 +60,36 @@ function PilotShipList() {
     }
 
     return (
-        <Paper sx={{ m: 4, px: 4, py: 2 }}>
-            <h1>All Pilots/Ships</h1>
-            {error && <p>Error! {JSON.stringify(error)}</p>}
-            {(loading || isAddLoading) && <p>Loading...</p>}
-            {data && (
-                <List>
-                    {data.map((pilotShip) => (
-                        <PilotShipListItem
-                            key={pilotShip.id}
-                            pilotShip={pilotShip}
-                        />
-                    ))}
-                    <ListItemButton
-                        onClick={() => {
-                            addNewPilot();
-                        }}
-                    >
-                        <ListItemIcon>
-                            <AddIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Add New Pilot" />
-                    </ListItemButton>
-                </List>
-            )}
-        </Paper>
+        <Box sx={{ pt: 4, pb: 2 }}>
+            <Typography sx={{ mx: 1 }} variant="h4">
+                {error && `Error! ${JSON.stringify(error)}`}
+                {(loading || isAddLoading) && "Loading..."}
+                {data && "All Pilots/Ships"}
+            </Typography>
+            <Paper sx={{ m: 1, mt: 3 }}>
+                {data && (
+                    <List>
+                        {data.map((pilotShip) => (
+                            <PilotShipListItem
+                                key={pilotShip.id}
+                                pilotShip={pilotShip}
+                            />
+                        ))}
+                        <ListItemButton
+                            sx={{ px: 4 }}
+                            onClick={() => {
+                                addNewPilot();
+                            }}
+                        >
+                            <ListItemIcon sx={{ "min-width": "36px" }}>
+                                <AddIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Add New Pilot" />
+                        </ListItemButton>
+                    </List>
+                )}
+            </Paper>
+        </Box>
     );
 }
 
@@ -96,6 +103,7 @@ const PilotShipListItem = (props: PilotShipProps) => {
     const pilotShip = props.pilotShip;
     return (
         <ListItemButton
+            sx={{ px: 4 }}
             onClick={() => {
                 const id: string = (pilotShip.id as string) ?? null;
                 if (id !== null) {
