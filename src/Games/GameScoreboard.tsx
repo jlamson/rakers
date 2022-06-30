@@ -108,6 +108,7 @@ export default function GameScoreboard() {
     }
 
     function updatePlayer(id: string, updateData: UpdateData<Player>) {
+        console.log(`updatePlayer(${id}): `, updateData);
         updateDoc(doc(playersRef, id), updateData)
             .then(
                 (value) => console.log(`updatePlayer fulfilled -> ${value}`),

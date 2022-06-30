@@ -28,12 +28,12 @@ export type Player = {
 
 export type Crew = {
     text: string;
-    isEqipped: boolean;
+    isEquipped: boolean;
 };
 
 export type Equipment = {
     text: string;
-    isEqipped: boolean;
+    isEquipped: boolean;
 };
 
 export type Cargo = {

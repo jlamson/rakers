@@ -11,14 +11,18 @@ import {
     ListItem,
     ListItemText,
     Input,
+    IconButton,
+    Checkbox,
 } from "@mui/material";
 import { UpdateData } from "firebase/firestore";
 import BigTitleInput from "../Components/BigTitleInput";
 import { RepSlider } from "../Components/RepSlider";
 import SkillsBox from "../Components/SkillsBox";
-import { Player } from "../Data/Player";
+import { Crew, Player } from "../Data/Player";
 import Skills from "../Data/Skills";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ConfirmDeleteDialog from "../Components/ConfirmDeleteDialog";
+import { count } from "../Utils/array";
 
 interface PlayerScorecardProps {
     playerId: string;
@@ -220,14 +224,50 @@ function CrebitsBlock(props: PlayerScorecardProps) {
 function CrewSection(props: PlayerScorecardProps) {
     const { playerId, player, onUpdatePlayer } = props;
     const [pendingCrew, setPendingCrew] = useState("");
+    const [pendingDeleteIndex, setPendingDeleteIndex] = useState(-1);
+    const equippedCount = useMemo(
+        () => count(player.crew, (it) => it.isEquipped),
+        [player.crew]
+    );
     return (
         <React.Fragment>
             <Typography sx={{ mb: 1 }} variant="h5">
-                Crew: {player.crew.length} / {player.pilotShip.ship.crewSlots}
+                Crew: {equippedCount} / {player.pilotShip.ship.crewSlots}
             </Typography>
             <List dense disablePadding>
-                {player.crew.map((c) => (
-                    <ListItem disableGutters>
+                {player.crew.map((c, i) => (
+                    <ListItem
+                        key={`${i}-${c.text}`}
+                        disableGutters
+                        secondaryAction={
+                            <IconButton
+                                edge="end"
+                                onClick={() => {
+                                    setPendingDeleteIndex(i);
+                                }}
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                        }
+                    >
+                        <Checkbox
+                            edge="start"
+                            checked={c.isEquipped}
+                            onChange={(event, checked) => {
+                                onUpdatePlayer(playerId, {
+                                    crew: player.crew.map<Crew>((it, j, _) => {
+                                        if (j === i) {
+                                            return {
+                                                ...it,
+                                                isEquipped: checked,
+                                            };
+                                        } else {
+                                            return it;
+                                        }
+                                    }),
+                                });
+                            }}
+                        />
                         <ListItemText primary={c.text} />
                     </ListItem>
                 ))}
@@ -255,7 +295,7 @@ function CrewSection(props: PlayerScorecardProps) {
                                 ...player.crew,
                                 {
                                     text: pendingCrew,
-                                    isEqipped: false,
+                                    isEquipped: false,
                                 },
                             ],
                         });
@@ -264,6 +304,20 @@ function CrewSection(props: PlayerScorecardProps) {
                 >
                     Add
                 </Button>
+                <ConfirmDeleteDialog
+                    open={pendingDeleteIndex >= 0}
+                    onCancel={() => {
+                        setPendingDeleteIndex(-1);
+                    }}
+                    onConfirmDelete={() => {
+                        onUpdatePlayer(playerId, {
+                            crew: player.crew.filter(
+                                (it, i, all) => i !== pendingDeleteIndex
+                            ),
+                        });
+                        setPendingDeleteIndex(-1);
+                    }}
+                />
             </Stack>
         </React.Fragment>
     );
@@ -308,7 +362,7 @@ function EquipmentSection(props: PlayerScorecardProps) {
                                 ...player.equipment,
                                 {
                                     text: pendingEquipment,
-                                    isEqipped: false,
+                                    isEquipped: false,
                                 },
                             ],
                         });
