@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import {
     Grid,
     Paper,
@@ -18,6 +18,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { replaceAtIndex } from "../Utils/array";
 import CheckableSubList from "../Components/CheckableSubList";
 import CargoList from "../Components/CargoList";
+import { parseIntStrict } from "../Utils/number";
 
 interface PlayerScorecardProps {
     playerId: string;
@@ -197,22 +198,62 @@ function ShipSection(props: PlayerScorecardProps) {
 
 function CrebitsBlock(props: PlayerScorecardProps) {
     const { playerId, player, onUpdatePlayer } = props;
+    const [crebitsDelta, setCrebitsDelta] = useState("");
+
+    const crebitsDeltaInvalid = useMemo(() => {
+        const crebitsNumber = parseIntStrict(crebitsDelta);
+        return isNaN(crebitsNumber) || crebitsNumber === 0;
+    }, [crebitsDelta]);
+
     return (
-        <TextField
-            fullWidth
-            label="Crebits"
-            inputProps={{
-                inputMode: "numeric",
-                pattern: "[0-9]*",
-            }}
-            variant="filled"
-            defaultValue={player.crebits}
-            onChange={(event) => {
-                onUpdatePlayer(playerId, {
-                    crebits: parseInt(event.target.value),
-                });
-            }}
-        />
+        <Stack direction="column" spacing={1}>
+            <TextField
+                fullWidth
+                label="Crebits"
+                inputProps={{
+                    inputMode: "numeric",
+                    pattern: "[0-9]*",
+                }}
+                variant="filled"
+                value={player.crebits}
+                onChange={(event) => {
+                    onUpdatePlayer(playerId, {
+                        crebits: parseIntStrict(event.target.value),
+                    });
+                }}
+            />
+            <Stack direction="row" spacing={1} alignItems="center">
+                <TextField
+                    fullWidth
+                    size="small"
+                    margin="dense"
+                    label="Add/Remove Crebits"
+                    inputProps={{
+                        inputMode: "numeric",
+                        pattern: "-?[0-9]*",
+                    }}
+                    variant="filled"
+                    value={crebitsDelta}
+                    onChange={(event) => {
+                        setCrebitsDelta(event.target.value);
+                    }}
+                />
+                <Button
+                    disabled={crebitsDeltaInvalid}
+                    variant="text"
+                    size="small"
+                    onClick={() => {
+                        onUpdatePlayer(playerId, {
+                            crebits:
+                                player.crebits + parseIntStrict(crebitsDelta),
+                        });
+                        setCrebitsDelta("");
+                    }}
+                >
+                    Apply
+                </Button>
+            </Stack>
+        </Stack>
     );
 }
 
