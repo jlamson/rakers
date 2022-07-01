@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { NavContext } from "../Nav/NavContext";
+import React, { useState } from "react";
+import { useNav } from "../Nav/NavContext";
 import { doc, updateDoc, UpdateData, deleteDoc } from "firebase/firestore";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { PilotShip } from "../Data/PilotShip";
@@ -21,10 +21,14 @@ import ConfirmDeleteDialog from "../Components/ConfirmDeleteDialog";
 import NavDests from "../Nav/NavDests";
 import db from "../Data/Db";
 
-export default function AddEditPilotShip() {
-    const [currentDest, navigateTo] = useContext(NavContext);
+interface ScreenEditPilotShipProps {
+    id: string;
+}
 
-    const id = currentDest.split("/")[1];
+export default function ScreenEditPilotShip(props: ScreenEditPilotShipProps) {
+    const navigateTo = useNav();
+
+    const { id } = props;
     const pilotShipRef = doc(db.pilotShips, id);
     const [pilotShip, loading, error] = useDocumentData(pilotShipRef);
 

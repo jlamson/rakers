@@ -2,7 +2,7 @@ import { Stack, Typography, IconButton } from "@mui/material";
 import React from "react";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
-import { GameContentProps } from "./GameScoreboard";
+import { GameContentProps } from "./ScreenGameScoreboard";
 
 export function TurnCounter(props: GameContentProps) {
     const { data: gameData, onUpdate } = props;

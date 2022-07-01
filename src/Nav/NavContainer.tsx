@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,7 +11,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import Router from "./Router";
 import DrawerNavItems from "./DrawerNavItems";
-import { NavContext } from "./NavContext";
 import Drawer from "@mui/material/Drawer";
 
 const drawerWidth: number = 240;
@@ -41,8 +40,6 @@ const AppBar = styled(MuiAppBar, {
 const mdTheme = createTheme();
 
 function NavContainer() {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [currentDest, _navigateTo] = useContext(NavContext);
     const [isDrawerOpen, setDrawerOpen] = useState(false);
     const toggleDrawer = () => {
         setDrawerOpen(!isDrawerOpen);
@@ -90,7 +87,7 @@ function NavContainer() {
                             noWrap
                             sx={{ flexGrow: 1 }}
                         >
-                            Rakers Scorecards &gt; {currentDest}
+                            <strong>Rakers</strong>
                         </Typography>
                     </Toolbar>
                 </AppBar>

@@ -6,14 +6,14 @@ import {
     UpdateData,
     updateDoc,
 } from "firebase/firestore";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
     useCollectionData,
     useDocumentData,
 } from "react-firebase-hooks/firestore";
 import ConfirmDeleteDialog from "../Components/ConfirmDeleteDialog";
 import { Game, gameConverter } from "../Data/Game";
-import { NavContext } from "../Nav/NavContext";
+import { useNav } from "../Nav/NavContext";
 import NavDests from "../Nav/NavDests";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FirebaseDataProps from "../Data/FirebaseDataProps";
@@ -25,10 +25,14 @@ import { AddNewPlayerForm } from "./AddNewPlayerForm";
 import BigTitleInput from "../Components/BigTitleInput";
 import db from "../Data/Db";
 
-export default function GameScoreboard() {
-    const [currentDest, navigateTo] = useContext(NavContext);
+interface ScreenGameScoreboardProps {
+    id: string;
+}
 
-    const id = currentDest.split("/")[1];
+export default function ScreenGameScoreboard(props: ScreenGameScoreboardProps) {
+    const navigateTo = useNav();
+
+    const { id } = props;
     const gameRef = doc(db.games, id);
     const playersRef = db.players(id);
 
@@ -129,12 +133,10 @@ export default function GameScoreboard() {
                 />
             )}
             {pilotShips && (
-                <React.Fragment>
-                    <AddNewPlayerForm
-                        pilotShips={pilotShips}
-                        addNewPlayer={addPlayer}
-                    />
-                </React.Fragment>
+                <AddNewPlayerForm
+                    pilotShips={pilotShips}
+                    addNewPlayer={addPlayer}
+                />
             )}
             <ConfirmDeleteDialog
                 open={showConfirmDelete}

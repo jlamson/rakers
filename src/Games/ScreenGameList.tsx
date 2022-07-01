@@ -10,17 +10,15 @@ import {
     Paper,
     Typography,
 } from "@mui/material";
-import { useContext } from "react";
-import { NavContext } from "../Nav/NavContext";
+import { useNav } from "../Nav/NavContext";
 import NavDests from "../Nav/NavDests";
 import FirebaseDataProps from "../Data/FirebaseDataProps";
 import { buildNewGame, Game } from "../Data/Game";
 import AddIcon from "@mui/icons-material/Add";
 import db from "../Data/Db";
 
-function GameList() {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_currentDest, navigateTo] = useContext(NavContext);
+function ScreenGameList() {
+    const navigateTo = useNav();
     const [values, loading, error] = useCollectionData(db.games);
     const doNothing = (_: UpdateData<Game>) => {};
 
@@ -73,8 +71,7 @@ function GameList() {
 
 const GameListItem = (props: FirebaseDataProps<Game>) => {
     const game = props.data;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_currentDest, navigateTo] = useContext(NavContext);
+    const navigateTo = useNav();
     const label = `${game.name}, turn ${game.turn}`;
 
     return (
@@ -88,4 +85,4 @@ const GameListItem = (props: FirebaseDataProps<Game>) => {
     );
 };
 
-export default GameList;
+export default ScreenGameList;

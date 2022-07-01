@@ -11,8 +11,7 @@ import {
     Paper,
     Typography,
 } from "@mui/material";
-import { useContext } from "react";
-import { NavContext } from "../Nav/NavContext";
+import { useNav } from "../Nav/NavContext";
 import NavDests from "../Nav/NavDests";
 import { buildNewPilot, PilotShip } from "../Data/PilotShip";
 import AddIcon from "@mui/icons-material/Add";
@@ -20,9 +19,8 @@ import { joinAsString } from "../Utils/array";
 import { capitalCase } from "change-case";
 import { doSafe } from "../Utils/scope";
 
-function PilotShipList() {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_currentDest, navigateTo] = useContext(NavContext);
+function ScreenPilotShipList() {
+    const navigateTo = useNav();
     const [data, loading, error] = useCollectionData(db.pilotShips);
     const [isAddLoading, setIsAddLoading] = useState(false);
 
@@ -77,8 +75,7 @@ interface PilotShipProps {
 }
 
 const PilotShipListItem = (props: PilotShipProps) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_currentDest, navigateTo] = useContext(NavContext);
+    const navigateTo = useNav();
     const pilotShip = props.pilotShip;
     return (
         <ListItemButton
@@ -101,4 +98,4 @@ const PilotShipListItem = (props: PilotShipProps) => {
     );
 };
 
-export default PilotShipList;
+export default ScreenPilotShipList;
