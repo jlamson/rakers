@@ -72,7 +72,7 @@ export default function CheckableSubList(props: CheckableSubListProps) {
                     margin="dense"
                     size="small"
                     variant="filled"
-                    label="New Crew"
+                    label={`New ${label}`}
                     multiline
                     value={pendingNew}
                     onChange={(event) => {
