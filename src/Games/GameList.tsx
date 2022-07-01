@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-    getFirestore,
-    collection,
-    UpdateData,
-    DocumentReference,
-    addDoc,
-} from "firebase/firestore";
+import { UpdateData, addDoc } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import {
     Box,
@@ -20,37 +14,23 @@ import { useContext } from "react";
 import { NavContext } from "../Nav/NavContext";
 import NavDests from "../Nav/NavDests";
 import FirebaseDataProps from "../Data/FirebaseDataProps";
-import { buildNewGame, Game, gameConverter } from "../Data/Game";
+import { buildNewGame, Game } from "../Data/Game";
 import AddIcon from "@mui/icons-material/Add";
+import db from "../Data/Db";
 
 function GameList() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_currentDest, navigateTo] = useContext(NavContext);
-    const gamesRef = collection(getFirestore(), "games").withConverter(
-        gameConverter
-    );
-    const [values, loading, error] = useCollectionData(gamesRef);
+    const [values, loading, error] = useCollectionData(db.games);
     const doNothing = (_: UpdateData<Game>) => {};
 
     const [isAddLoading, setIsAddLoading] = useState(false);
 
     function startNewGame() {
         setIsAddLoading(true);
-        addDoc(gamesRef, buildNewGame())
-            .then(
-                (value: DocumentReference<Game>) => {
-                    navigateTo(NavDests.games.forId(value.id));
-                },
-                (reason: any) => {
-                    console.error(reason);
-                    alert(
-                        `Failed to start new game (rejected, reason=${reason})`
-                    );
-                }
-            )
-            .catch((error: Error) => {
-                console.error(error);
-                alert("Failed to start new game");
+        addDoc(db.games, buildNewGame())
+            .then((value) => {
+                navigateTo(NavDests.games.forId(value.id));
             })
             .finally(() => {
                 setIsAddLoading(false);
@@ -100,10 +80,7 @@ const GameListItem = (props: FirebaseDataProps<Game>) => {
     return (
         <ListItemButton
             onClick={() => {
-                const gameId = game.id;
-                if (gameId !== undefined) {
-                    navigateTo(NavDests.games.forId(gameId));
-                }
+                navigateTo(NavDests.games.forId(game.id));
             }}
         >
             <ListItemText primary={label} />

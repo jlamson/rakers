@@ -1,6 +1,5 @@
 import {
     DocumentData,
-    DocumentReference,
     FirestoreDataConverter,
     QueryDocumentSnapshot,
     SnapshotOptions,
@@ -8,16 +7,14 @@ import {
 } from "@firebase/firestore";
 
 export type Game = {
-    id: string | undefined;
-    ref: DocumentReference | undefined;
+    id: string;
     name: string;
     turn: number;
 };
 
 export function buildNewGame(): Game {
     return {
-        id: undefined,
-        ref: undefined,
+        id: "",
         name: "New Game",
         turn: 0,
     };
@@ -37,7 +34,6 @@ export const gameConverter: FirestoreDataConverter<Game> = {
         const data = snapshot.data();
         return {
             id: snapshot.id,
-            ref: snapshot.ref,
             name: data.name,
             turn: data.turn,
         };

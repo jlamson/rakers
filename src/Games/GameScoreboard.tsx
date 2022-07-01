@@ -1,11 +1,8 @@
 import { Box, Stack, Typography, Button, Grid, Paper } from "@mui/material";
 import {
     addDoc,
-    collection,
     deleteDoc,
     doc,
-    DocumentReference,
-    getFirestore,
     UpdateData,
     updateDoc,
 } from "firebase/firestore";
@@ -20,78 +17,55 @@ import { NavContext } from "../Nav/NavContext";
 import NavDests from "../Nav/NavDests";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FirebaseDataProps from "../Data/FirebaseDataProps";
-import { PilotShip, pilotShipConverter } from "../Data/PilotShip";
-import { buildNewPlayer, Player, playerConverter } from "../Data/Player";
+import { PilotShip } from "../Data/PilotShip";
+import { buildNewPlayer, Player } from "../Data/Player";
 import { TurnCounter } from "./TurnCounter";
 import { PlayerList } from "./PlayerList";
 import { AddNewPlayerForm } from "./AddNewPlayerForm";
 import BigTitleInput from "../Components/BigTitleInput";
+import db from "../Data/Db";
 
 export default function GameScoreboard() {
     const [currentDest, navigateTo] = useContext(NavContext);
-    const id = currentDest.split("/")[1];
 
-    const gameRef = doc(getFirestore(), "games", id);
+    const id = currentDest.split("/")[1];
+    const gameRef = doc(db.games, id);
+    const playersRef = db.players(id);
+
     const [game, gameLoading, gameError] = useDocumentData(
         gameRef.withConverter(gameConverter)
     );
-
-    const pilotShipsRef = collection(
-        getFirestore(),
-        "pilotShips"
-    ).withConverter(pilotShipConverter);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [pilotShips, _pilotShipsLoading, _pilotShipsError] =
-        useCollectionData(pilotShipsRef);
-
-    const playersRef = collection(
-        getFirestore(),
-        "games",
-        id,
-        "players"
-    ).withConverter(playerConverter);
+    const [pilotShips, ..._unused0] = useCollectionData(db.pilotShips);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [players, _playersLoading, _playersError] =
-        useCollectionData(playersRef);
+    const [players, ..._usused1] = useCollectionData(playersRef);
 
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
 
     function updateGame(updateData: UpdateData<Game>) {
-        updateDoc(gameRef, updateData)
-            .then(
-                (value) => console.log(`updateGame fulfilled -> ${value}`),
-                (value) => console.log(`updateGame rejected -> ${value}`)
-            )
-            .catch((e) => console.log(e));
+        updateDoc(gameRef, updateData);
     }
 
     function deleteGame() {
+        if (players === undefined) return;
         setDeleteLoading(true);
-        deleteDoc(gameRef)
-            .then(() => {
-                navigateTo(NavDests.games.list);
-            })
-            .finally(() => {
-                setDeleteLoading(false);
-            });
+        const deletePlayersPromoses = players.map((p, i, arr) =>
+            deleteDoc(doc(playersRef, p.id))
+        );
+        Promise.all(deletePlayersPromoses).then((values) => {
+            deleteDoc(gameRef)
+                .then(() => {
+                    navigateTo(NavDests.games.list);
+                })
+                .finally(() => {
+                    setDeleteLoading(false);
+                });
+        });
     }
 
     function addPlayer(name: string, pilotShip: PilotShip) {
-        addDoc(playersRef, buildNewPlayer(name, pilotShip))
-            .then(
-                (value: DocumentReference<Player>) => {},
-                (reason: any) => {
-                    console.error(reason);
-                    alert(
-                        `Failed to create new player (rejected, reason=${reason})`
-                    );
-                }
-            )
-            .catch((error: Error) => {
-                console.error(error);
-                alert("Failed to create new player");
-            });
+        addDoc(playersRef, buildNewPlayer(name, pilotShip));
     }
 
     function deletePlayer(id: string) {
@@ -102,13 +76,7 @@ export default function GameScoreboard() {
     }
 
     function updatePlayer(id: string, updateData: UpdateData<Player>) {
-        console.log(`updatePlayer(${id}): `, updateData);
-        updateDoc(doc(playersRef, id), updateData)
-            .then(
-                (value) => console.log(`updatePlayer fulfilled -> ${value}`),
-                (value) => console.log(`updatePlayer rejected -> ${value}`)
-            )
-            .catch((e) => console.log(e));
+        updateDoc(doc(playersRef, id), updateData);
     }
 
     const inFlux = gameError !== undefined || gameLoading || deleteLoading;

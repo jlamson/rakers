@@ -1,14 +1,8 @@
 import React, { useContext, useState } from "react";
 import { NavContext } from "../Nav/NavContext";
-import {
-    getFirestore,
-    doc,
-    updateDoc,
-    UpdateData,
-    deleteDoc,
-} from "firebase/firestore";
+import { doc, updateDoc, UpdateData, deleteDoc } from "firebase/firestore";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { PilotShip, pilotShipConverter } from "../Data/PilotShip";
+import { PilotShip } from "../Data/PilotShip";
 import {
     Box,
     Button,
@@ -25,14 +19,15 @@ import FirebaseDataProps from "../Data/FirebaseDataProps";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ConfirmDeleteDialog from "../Components/ConfirmDeleteDialog";
 import NavDests from "../Nav/NavDests";
+import db from "../Data/Db";
 
 export default function AddEditPilotShip() {
     const [currentDest, navigateTo] = useContext(NavContext);
+
     const id = currentDest.split("/")[1];
-    const pilotShipRef = doc(getFirestore(), "pilotShips", id);
-    const [pilotShip, loading, error] = useDocumentData(
-        pilotShipRef.withConverter(pilotShipConverter)
-    );
+    const pilotShipRef = doc(db.pilotShips, id);
+    const [pilotShip, loading, error] = useDocumentData(pilotShipRef);
+
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
 
@@ -43,6 +38,7 @@ export default function AddEditPilotShip() {
     }
 
     function deletePilotShip() {
+        setDeleteLoading(true);
         deleteDoc(pilotShipRef)
             .then(() => {
                 navigateTo(NavDests.pilotShips.list);

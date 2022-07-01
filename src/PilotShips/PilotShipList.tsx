@@ -1,10 +1,6 @@
 import React, { useState } from "react";
-import {
-    getFirestore,
-    collection,
-    addDoc,
-    DocumentReference,
-} from "firebase/firestore";
+import db from "../Data/Db";
+import { addDoc } from "firebase/firestore";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import {
     Box,
@@ -18,43 +14,23 @@ import {
 import { useContext } from "react";
 import { NavContext } from "../Nav/NavContext";
 import NavDests from "../Nav/NavDests";
-import {
-    buildNewPilot,
-    PilotShip,
-    pilotShipConverter,
-} from "../Data/PilotShip";
+import { buildNewPilot, PilotShip } from "../Data/PilotShip";
 import AddIcon from "@mui/icons-material/Add";
 import { joinAsString } from "../Utils/array";
 import { capitalCase } from "change-case";
+import { doSafe } from "../Utils/scope";
 
 function PilotShipList() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_currentDest, navigateTo] = useContext(NavContext);
-    const collectionRef = collection(
-        getFirestore(),
-        "pilotShips"
-    ).withConverter(pilotShipConverter);
-
-    const [data, loading, error] = useCollectionData(collectionRef);
+    const [data, loading, error] = useCollectionData(db.pilotShips);
     const [isAddLoading, setIsAddLoading] = useState(false);
 
     function addNewPilot() {
         setIsAddLoading(true);
-        addDoc(collectionRef, buildNewPilot("New Pilot"))
-            .then(
-                (value: DocumentReference<PilotShip>) => {
-                    navigateTo(NavDests.pilotShips.forId(value.id));
-                },
-                (reason: any) => {
-                    console.error(reason);
-                    alert(
-                        `Failed to create new pilot (rejected, reason=${reason})`
-                    );
-                }
-            )
-            .catch((error: Error) => {
-                console.error(error);
-                alert("Failed to create new pilot");
+        addDoc(db.pilotShips, buildNewPilot("New Pilot"))
+            .then((value) => {
+                navigateTo(NavDests.pilotShips.forId(value.id));
             })
             .finally(() => {
                 setIsAddLoading(false);
@@ -78,6 +54,7 @@ function PilotShipList() {
                             />
                         ))}
                         <ListItemButton
+                            key="addNewPilot"
                             sx={{ px: 4 }}
                             onClick={() => {
                                 addNewPilot();
@@ -107,10 +84,9 @@ const PilotShipListItem = (props: PilotShipProps) => {
         <ListItemButton
             sx={{ px: 4 }}
             onClick={() => {
-                const id: string = (pilotShip.id as string) ?? null;
-                if (id !== null) {
+                doSafe(pilotShip.id, (id) => {
                     navigateTo(NavDests.pilotShips.forId(id));
-                }
+                });
             }}
         >
             <ListItemText

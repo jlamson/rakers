@@ -1,6 +1,5 @@
 import {
     DocumentData,
-    DocumentReference,
     FirestoreDataConverter,
     QueryDocumentSnapshot,
     SnapshotOptions,
@@ -11,8 +10,7 @@ import { Ship } from "./Ship";
 import Skills from "./Skills";
 
 export type PilotShip = {
-    id: string | undefined;
-    ref: DocumentReference | undefined;
+    id: string;
     name: string;
     ship: Ship;
     specialAbility: string;
@@ -29,8 +27,7 @@ export type PilotShip = {
  */
 export function buildNewPilot(name: string): WithFieldValue<PilotShip> {
     return {
-        id: undefined,
-        ref: undefined,
+        id: "",
         name: name,
         ship: {
             name: "",
@@ -70,7 +67,6 @@ export const pilotShipConverter: FirestoreDataConverter<PilotShip> = {
 
         return {
             id: snapshot.id,
-            ref: snapshot.ref,
             name: data.name,
             ship: data.ship,
             specialAbility: data.specialAbility,

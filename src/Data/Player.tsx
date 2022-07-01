@@ -11,8 +11,7 @@ import { Rep } from "./Rep";
 import Skills from "./Skills";
 
 export type Player = {
-    id: string | undefined;
-    ref: DocumentReference | undefined;
+    id: string;
     name: string;
     pilotShip: PilotShip;
     maintenance: number;
@@ -50,8 +49,7 @@ export function buildNewPlayer(
     pilotShip: PilotShip
 ): WithFieldValue<Player> {
     return {
-        id: undefined,
-        ref: undefined,
+        id: "",
         name: name,
         pilotShip: pilotShip,
         maintenance: 10,
@@ -87,7 +85,6 @@ export const playerConverter: FirestoreDataConverter<Player> = {
         const data = snapshot.data();
         return {
             id: snapshot.id,
-            ref: snapshot.ref,
             name: data.name,
             pilotShip: data.pilotShip,
             maintenance: data.maintenance,
