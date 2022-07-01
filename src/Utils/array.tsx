@@ -25,3 +25,15 @@ export function replaceAtIndex<T>(
         else return it;
     });
 }
+
+export function joinAsString(
+    array: string[],
+    separator: string = ", "
+): string {
+    let buildStr = "";
+    array.forEach((it, _) => {
+        if (buildStr !== "") buildStr += separator;
+        buildStr += it;
+    });
+    return buildStr;
+}

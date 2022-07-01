@@ -24,6 +24,8 @@ import {
     pilotShipConverter,
 } from "../Data/PilotShip";
 import AddIcon from "@mui/icons-material/Add";
+import { joinAsString } from "../Utils/array";
+import { capitalCase } from "change-case";
 
 function PilotShipList() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -112,8 +114,12 @@ const PilotShipListItem = (props: PilotShipProps) => {
             }}
         >
             <ListItemText
-                primary={pilotShip.name}
-                secondary={pilotShip.startingSkills}
+                primary={`${pilotShip.name} [${joinAsString(
+                    pilotShip.startingSkills.map((it, i, arr) =>
+                        capitalCase(it)
+                    )
+                )}]`}
+                secondary={pilotShip.specialAbility}
             />
         </ListItemButton>
     );
