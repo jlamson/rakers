@@ -11,16 +11,17 @@ import {
     Paper,
     Typography,
 } from "@mui/material";
-import { useNav } from "../Nav/NavContext";
 import NavDests from "../Nav/NavDests";
 import { buildNewPilot, PilotShip } from "../Data/PilotShip";
 import AddIcon from "@mui/icons-material/Add";
 import { joinAsString } from "../Utils/array";
 import { capitalCase } from "change-case";
 import { doSafe } from "../Utils/scope";
+import { useNavigate } from "react-router-dom";
 
 function ScreenPilotShipList() {
-    const navigateTo = useNav();
+    const navigateTo = useNavigate();
+
     const [data, loading, error] = useCollectionData(db.pilotShips);
     const [isAddLoading, setIsAddLoading] = useState(false);
 
@@ -75,7 +76,7 @@ interface PilotShipProps {
 }
 
 const PilotShipListItem = (props: PilotShipProps) => {
-    const navigateTo = useNav();
+    const navigateTo = useNavigate();
     const pilotShip = props.pilotShip;
     return (
         <ListItemButton

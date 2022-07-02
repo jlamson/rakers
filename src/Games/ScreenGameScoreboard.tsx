@@ -13,7 +13,6 @@ import {
 } from "react-firebase-hooks/firestore";
 import ConfirmDeleteDialog from "../Components/ConfirmDeleteDialog";
 import { Game, gameConverter } from "../Data/Game";
-import { useNav } from "../Nav/NavContext";
 import NavDests from "../Nav/NavDests";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FirebaseDataProps from "../Data/FirebaseDataProps";
@@ -24,15 +23,14 @@ import { PlayerList } from "./PlayerList";
 import { AddNewPlayerForm } from "./AddNewPlayerForm";
 import BigTitleInput from "../Components/BigTitleInput";
 import db from "../Data/Db";
+import { useParams, useNavigate } from "react-router-dom";
 
-interface ScreenGameScoreboardProps {
-    id: string;
-}
+export default function ScreenGameScoreboard() {
+    const navigateTo = useNavigate();
 
-export default function ScreenGameScoreboard(props: ScreenGameScoreboardProps) {
-    const navigateTo = useNav();
+    const navParams = useParams();
+    const id = navParams.id as string;
 
-    const { id } = props;
     const gameRef = doc(db.games, id);
     const playersRef = db.players(id);
 

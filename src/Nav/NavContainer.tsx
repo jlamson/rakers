@@ -9,9 +9,10 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import Router from "./Router";
 import DrawerNavItems from "./DrawerNavItems";
 import Drawer from "@mui/material/Drawer";
+import { Container } from "@mui/material";
+import { Outlet } from "react-router-dom";
 
 const drawerWidth: number = 240;
 
@@ -135,7 +136,12 @@ function NavContainer() {
                     }}
                 >
                     <Toolbar />
-                    <Router />
+                    <Container maxWidth="lg">
+                        {/* See <App /> for list of sub-routes that will be 
+                            shown here
+                        */}
+                        <Outlet />
+                    </Container>
                 </Box>
             </Box>
         </ThemeProvider>

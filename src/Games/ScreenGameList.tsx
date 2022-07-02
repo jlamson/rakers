@@ -10,15 +10,15 @@ import {
     Paper,
     Typography,
 } from "@mui/material";
-import { useNav } from "../Nav/NavContext";
 import NavDests from "../Nav/NavDests";
 import FirebaseDataProps from "../Data/FirebaseDataProps";
 import { buildNewGame, Game } from "../Data/Game";
 import AddIcon from "@mui/icons-material/Add";
 import db from "../Data/Db";
+import { useNavigate } from "react-router-dom";
 
 function ScreenGameList() {
-    const navigateTo = useNav();
+    const navigateTo = useNavigate();
     const [values, loading, error] = useCollectionData(db.games);
     const doNothing = (_: UpdateData<Game>) => {};
 
@@ -71,7 +71,7 @@ function ScreenGameList() {
 
 const GameListItem = (props: FirebaseDataProps<Game>) => {
     const game = props.data;
-    const navigateTo = useNav();
+    const navigateTo = useNavigate();
     const label = `${game.name}, turn ${game.turn}`;
 
     return (

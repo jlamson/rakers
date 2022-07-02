@@ -5,11 +5,11 @@ import ListItemText from "@mui/material/ListItemText";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import CasinoIcon from "@mui/icons-material/Casino";
 import NavDests from "./NavDests";
-import { useNav } from "./NavContext";
 import { List } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const DrawerNavItems = () => {
-    const navigateTo = useNav();
+    const navigateTo = useNavigate();
     const iconSx = { minWidth: "36px" };
     return (
         <List component="nav">

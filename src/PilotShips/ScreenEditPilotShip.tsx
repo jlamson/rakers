@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNav } from "../Nav/NavContext";
 import { doc, updateDoc, UpdateData, deleteDoc } from "firebase/firestore";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { PilotShip } from "../Data/PilotShip";
@@ -23,15 +22,13 @@ import db from "../Data/Db";
 import ResourceProficiencyBox from "../Components/ResourceProficiencyBox";
 import Resource from "../Data/Resource";
 import { toggle } from "../Utils/array";
+import { useParams, useNavigate } from "react-router-dom";
 
-interface ScreenEditPilotShipProps {
-    id: string;
-}
+export default function ScreenEditPilotShip() {
+    const navigateTo = useNavigate();
+    const navParams = useParams();
+    const id = navParams.id as string;
 
-export default function ScreenEditPilotShip(props: ScreenEditPilotShipProps) {
-    const navigateTo = useNav();
-
-    const { id } = props;
     const pilotShipRef = doc(db.pilotShips, id);
     const [pilotShip, loading, error] = useDocumentData(pilotShipRef);
 
