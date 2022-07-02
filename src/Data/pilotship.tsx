@@ -36,6 +36,7 @@ export function buildNewPilot(name: string): WithFieldValue<PilotShip> {
             crewSlots: 0,
             equipmentSlots: 0,
             holdSlots: 0,
+            resourceProficiencies: [],
         },
         specialAbility: "",
         startingCrebits: 0,

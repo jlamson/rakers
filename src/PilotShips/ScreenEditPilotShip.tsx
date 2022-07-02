@@ -20,6 +20,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ConfirmDeleteDialog from "../Components/ConfirmDeleteDialog";
 import NavDests from "../Nav/NavDests";
 import db from "../Data/Db";
+import ResourceProficiencyBox from "../Components/ResourceProficiencyBox";
+import Resource from "../Data/Resource";
+import { toggle } from "../Utils/array";
 
 interface ScreenEditPilotShipProps {
     id: string;
@@ -131,12 +134,7 @@ function PilotForm(props: PilotShipFormProps) {
     const { data: pilotShip, onUpdate } = props;
 
     function toggleSkill(skill: Skills) {
-        const oldSkills = pilotShip.startingSkills;
-        if (oldSkills.includes(skill)) {
-            onUpdate({ startingSkills: oldSkills.filter((s) => s !== skill) });
-        } else {
-            onUpdate({ startingSkills: [...oldSkills, skill] });
-        }
+        onUpdate({ startingSkills: toggle(pilotShip.startingSkills, skill) });
     }
 
     return (
@@ -198,6 +196,13 @@ function PilotForm(props: PilotShipFormProps) {
 
 function ShipForm(props: PilotShipFormProps) {
     const { data: pilotShip, onUpdate } = props;
+
+    function toggleProficiency(resource: Resource) {
+        const profs = pilotShip.ship.resourceProficiencies;
+        onUpdate({
+            "ship.resourceProficiencies": toggle(profs, resource),
+        });
+    }
 
     return (
         <Grid container spacing={1}>
@@ -284,6 +289,13 @@ function ShipForm(props: PilotShipFormProps) {
                             "ship.equipmentSlots": parseInt(event.target.value),
                         });
                     }}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <ResourceProficiencyBox
+                    title="Starting Proficiencies"
+                    proficiencies={pilotShip.ship.resourceProficiencies}
+                    toggleProficiency={toggleProficiency}
                 />
             </Grid>
         </Grid>

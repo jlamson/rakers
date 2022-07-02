@@ -12,13 +12,15 @@ import { UpdateData } from "firebase/firestore";
 import BigTitleInput from "../Components/BigTitleInput";
 import { RepSlider } from "../Components/RepSlider";
 import SkillsBox from "../Components/SkillsBox";
-import { Player } from "../Data/Player";
+import { Cargo, Player } from "../Data/Player";
 import Skills from "../Data/Skills";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { replaceAtIndex } from "../Utils/array";
+import { replaceAtIndex, toggle } from "../Utils/array";
 import CheckableSubList from "../Components/CheckableSubList";
 import CargoList from "../Components/CargoList";
 import { parseIntStrict } from "../Utils/number";
+import Resource from "../Data/Resource";
+import ResourceProficiencyBox from "../Components/ResourceProficiencyBox";
 
 interface PlayerScorecardProps {
     playerId: string;
@@ -31,14 +33,18 @@ export default function PlayerScorecard(props: PlayerScorecardProps) {
     const { playerId, player, onUpdatePlayer } = props;
 
     function toggleSkill(skill: Skills) {
-        const oldSkills = player.skills;
-        if (oldSkills.includes(skill)) {
-            onUpdatePlayer(playerId, {
-                skills: oldSkills.filter((s) => s !== skill),
-            });
-        } else {
-            onUpdatePlayer(playerId, { skills: [...oldSkills, skill] });
-        }
+        onUpdatePlayer(playerId, {
+            skills: toggle(player.skills, skill),
+        });
+    }
+
+    function toggleProficiency(resource: Resource) {
+        onUpdatePlayer(playerId, {
+            resourceProficiencies: toggle(
+                player.resourceProficiencies,
+                resource
+            ),
+        });
     }
 
     const columnGridItemProps = { sm: 12, md: 6, lg: 4 };
@@ -59,13 +65,11 @@ export default function PlayerScorecard(props: PlayerScorecardProps) {
                         <PilotSection {...props} />
                     </Paper>
                     <Paper sx={paperSx}>
-                        <Grid container>
-                            <SkillsBox
-                                title="Skills"
-                                skills={player.skills}
-                                toggleSkill={toggleSkill}
-                            />
-                        </Grid>
+                        <SkillsBox
+                            title="Skills"
+                            skills={player.skills}
+                            toggleSkill={toggleSkill}
+                        />
                     </Paper>
                     <Paper sx={paperSx}>
                         <CrewSection {...props} />
@@ -78,10 +82,17 @@ export default function PlayerScorecard(props: PlayerScorecardProps) {
                         <ShipSection {...props} />
                     </Paper>
                     <Paper sx={paperSx}>
-                        <EquipmentSection {...props} />
+                        <ResourceProficiencyBox
+                            title="Resource Proficiencies"
+                            proficiencies={player.resourceProficiencies}
+                            toggleProficiency={toggleProficiency}
+                        />
                     </Paper>
                     <Paper sx={paperSx}>
                         <HoldSection {...props} />
+                    </Paper>
+                    <Paper sx={paperSx}>
+                        <EquipmentSection {...props} />
                     </Paper>
                 </Stack>
             </Grid>
@@ -324,18 +335,26 @@ function EquipmentSection(props: PlayerScorecardProps) {
 function HoldSection(props: PlayerScorecardProps) {
     const { playerId, player, onUpdatePlayer } = props;
 
+    function appendCargo(resource: Resource, amount: number) {
+        const cargo = player.cargo;
+        let updatedCargo: Cargo[];
+        const indexOfRes = cargo.findIndex((c) => c.resource === resource);
+        if (indexOfRes < 0) {
+            updatedCargo = [...cargo, { resource: resource, amount: amount }];
+        } else {
+            updatedCargo = cargo.map((c, i) => {
+                if (i === indexOfRes) {
+                    return { resource: c.resource, amount: c.amount + amount };
+                } else return c;
+            });
+        }
+        onUpdatePlayer(playerId, { cargo: updatedCargo });
+    }
     return (
         <CargoList
-            list={player.cargo}
+            cargo={player.cargo}
             max={player.pilotShip.ship.holdSlots}
-            onDeleteIndex={(index) => {
-                onUpdatePlayer(playerId, {
-                    cargo: player.cargo.filter((it, i, all) => i !== index),
-                });
-            }}
-            onAddNew={(item) => {
-                onUpdatePlayer(playerId, { cargo: [...player.cargo, item] });
-            }}
+            onAppendCargo={appendCargo}
         />
     );
 }

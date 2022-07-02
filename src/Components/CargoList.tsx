@@ -4,38 +4,55 @@ import {
     ListItem,
     ListItemText,
     Stack,
-    TextField,
     Button,
-    IconButton,
-    FilledInput,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
 } from "@mui/material";
 import React, { useMemo, useState } from "react";
 import { Cargo } from "../Data/Player";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ConfirmDeleteDialog from "./ConfirmDeleteDialog";
+import Resource, { displayText, ResourceKeys } from "../Data/Resource";
+import { parseIntStrict } from "../Utils/number";
 
 interface CargoListProps {
-    list: Cargo[];
+    cargo: Cargo[];
     max: number;
-    onDeleteIndex: (i: number) => void;
-    onAddNew: (item: Cargo) => void;
+    onAppendCargo: (resource: Resource, amount: number) => void;
 }
 
 export default function CargoList(props: CargoListProps) {
-    const { list, max, onDeleteIndex, onAddNew } = props;
+    const { cargo, max, onAppendCargo } = props;
 
-    const [pendingHold, setPendingHold] = useState("");
-    const [pendingHoldAmount, setPendingHoldAmount] = useState(0);
-    const [pendingDeleteIndex, setPendingDeleteIndex] = useState(-1);
+    function amountOf(resource: Resource): number {
+        return cargo.find((c) => c.resource === resource)?.amount ?? 0;
+    }
 
-    const canAddHold = useMemo(
-        () => pendingHold !== "" && pendingHoldAmount > 0,
-        [pendingHold, pendingHoldAmount]
+    const [selectedResource, setSelectedResource] = useState(
+        Resource.SCRAP_METAL
     );
-    const holdAmount = useMemo(
-        () => list.reduce<number>((acc, cur, i, all) => acc + cur.holdSize, 0),
-        [list]
-    );
+    const [pendingAmountStr, setPendingAmountStr] = useState("");
+
+    const canAddHold = useMemo(() => {
+        const amountNumber = parseIntStrict(pendingAmountStr);
+        return (
+            selectedResource != null &&
+            !isNaN(amountNumber) &&
+            amountNumber !== 0
+        );
+    }, [selectedResource, pendingAmountStr]);
+
+    const holdAmount = useMemo(() => {
+        console.log("holdAmount: ", cargo);
+        return cargo.reduce((acc, cur) => {
+            const result = acc + cur.amount;
+            console.log(
+                `reduce ${result} = acc(${acc}) + cur.amount(${cur.amount})`
+            );
+            return result;
+        }, 0);
+    }, [cargo]);
 
     return (
         <React.Fragment>
@@ -43,53 +60,57 @@ export default function CargoList(props: CargoListProps) {
                 Cargo: {holdAmount} / {max}
             </Typography>
             <List dense disablePadding>
-                {list.map((cargo, index) => (
-                    <ListItem
-                        key={`${index}-${cargo.text}`}
-                        disableGutters
-                        secondaryAction={
-                            <IconButton
-                                edge="end"
-                                onClick={() => {
-                                    setPendingDeleteIndex(index);
-                                }}
-                            >
-                                <DeleteIcon />
-                            </IconButton>
-                        }
-                    >
-                        <ListItemText
-                            primary={`[${cargo.holdSize}] ${cargo.text}`}
-                        />
-                    </ListItem>
-                ))}
+                {ResourceKeys.map((key) => {
+                    const resource = Resource[key];
+                    return (
+                        <ListItem key={`${resource}`} disableGutters>
+                            <ListItemText
+                                primary={`[${amountOf(resource)}] ${displayText(
+                                    resource
+                                )}`}
+                            />
+                        </ListItem>
+                    );
+                })}
             </List>
+            <Typography variant="h5" sx={{ mt: 2, mb: 0.5 }}>
+                Add/Remove Resources
+            </Typography>
             <Stack
                 sx={{ mt: 2 }}
                 spacing={1}
                 direction="row"
                 alignItems="stretch"
             >
+                <FormControl fullWidth>
+                    <InputLabel>Resource</InputLabel>
+                    <Select
+                        value={selectedResource}
+                        label="Resource"
+                        onChange={(event) => {
+                            setSelectedResource(event.target.value as Resource);
+                        }}
+                    >
+                        {ResourceKeys.map((key) => {
+                            const resource = Resource[key];
+                            return (
+                                <MenuItem key={resource} value={resource}>
+                                    {displayText(resource)}
+                                </MenuItem>
+                            );
+                        })}
+                    </Select>
+                </FormControl>
                 <TextField
-                    fullWidth
                     variant="filled"
-                    label="New Cargo"
-                    value={pendingHold}
-                    onChange={(event) => {
-                        setPendingHold(event.target.value);
-                    }}
-                />
-                <FilledInput
-                    size="small"
+                    label="Amount"
                     inputProps={{
-                        width: "50px",
-                        step: 10,
-                        min: 0,
-                        type: "number",
+                        inputMode: "numeric",
+                        pattern: "-?[0-9]*",
                     }}
-                    value={pendingHoldAmount}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setPendingHoldAmount(parseInt(e.target.value));
+                    value={pendingAmountStr}
+                    onChange={(event) => {
+                        setPendingAmountStr(event.target.value);
                     }}
                 />
                 <Button
@@ -97,27 +118,15 @@ export default function CargoList(props: CargoListProps) {
                     variant="text"
                     size="small"
                     onClick={() => {
-                        onAddNew({
-                            text: pendingHold,
-                            holdSize: pendingHoldAmount,
-                        });
-                        setPendingHold("");
-                        setPendingHoldAmount(0);
+                        onAppendCargo(
+                            selectedResource as Resource,
+                            parseIntStrict(pendingAmountStr)
+                        );
+                        setPendingAmountStr("");
                     }}
                 >
                     Add
                 </Button>
-                <ConfirmDeleteDialog
-                    open={pendingDeleteIndex >= 0}
-                    entityName="Cargo"
-                    onCancel={() => {
-                        setPendingDeleteIndex(-1);
-                    }}
-                    onConfirmDelete={() => {
-                        onDeleteIndex(pendingDeleteIndex);
-                        setPendingDeleteIndex(-1);
-                    }}
-                />
             </Stack>
         </React.Fragment>
     );

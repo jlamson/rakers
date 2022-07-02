@@ -1,3 +1,5 @@
+import Resource from "./Resource";
+
 export type Ship = {
     name: string;
     type: string;
@@ -5,4 +7,5 @@ export type Ship = {
     crewSlots: number;
     equipmentSlots: number;
     holdSlots: number;
+    resourceProficiencies: Resource[];
 };

@@ -5,6 +5,7 @@ import {
     SnapshotOptions,
     WithFieldValue,
 } from "firebase/firestore";
+import Resource from "./Resource";
 import { PilotShip } from "./PilotShip";
 import { Rep } from "./Rep";
 import Skills from "./Skills";
@@ -18,6 +19,7 @@ export type Player = {
     crebits: number;
     rep: Rep;
     skills: Skills[];
+    resourceProficiencies: Resource[];
     crew: Crew[];
     equipment: Equipment[];
     cargo: Cargo[];
@@ -39,8 +41,8 @@ export type Equipment = {
 };
 
 export type Cargo = {
-    text: string;
-    holdSize: number;
+    resource: Resource;
+    amount: number;
 };
 
 export function buildNewPlayer(
@@ -56,6 +58,7 @@ export function buildNewPlayer(
         crebits: pilotShip.startingCrebits,
         rep: pilotShip.startingRep,
         skills: pilotShip.startingSkills,
+        resourceProficiencies: pilotShip.ship.resourceProficiencies,
         crew: [],
         equipment: [],
         cargo: [],
@@ -72,6 +75,7 @@ export const playerConverter: FirestoreDataConverter<Player> = {
             crebits: model.crebits,
             rep: model.rep,
             skills: model.skills,
+            resourceProficiencies: model.resourceProficiencies,
             crew: model.crew,
             equipment: model.equipment,
             cargo: model.cargo,
@@ -91,6 +95,7 @@ export const playerConverter: FirestoreDataConverter<Player> = {
             crebits: data.crebits,
             rep: data.rep,
             skills: data.skills,
+            resourceProficiencies: data.resourceProficiencies,
             crew: data.crew,
             equipment: data.equipment,
             cargo: data.cargo,

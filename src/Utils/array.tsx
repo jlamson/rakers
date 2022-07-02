@@ -37,3 +37,18 @@ export function joinAsString(
     });
     return buildStr;
 }
+
+/**
+ * @param array an array of T
+ * @param value the value to "toggle"
+ * @returns if the value is included in array, returns a copy of the array with
+ * the value filtered out. If the value is not included in array, returns a copy
+ * of array with value appended on the end
+ */
+export function toggle<T>(array: T[], value: T): T[] {
+    if (array.includes(value)) {
+        return array.filter((it) => it !== value);
+    } else {
+        return [...array, value];
+    }
+}
