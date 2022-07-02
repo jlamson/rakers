@@ -21,6 +21,8 @@ import CargoList from "../Components/CargoList";
 import { parseIntStrict } from "../Utils/number";
 import Resource from "../Data/Resource";
 import ResourceProficiencyBox from "../Components/ResourceProficiencyBox";
+import NavDests from "../Nav/NavDests";
+import { Link } from "react-router-dom";
 
 interface PlayerScorecardProps {
     playerId: string;
@@ -151,6 +153,9 @@ function PilotSection(props: PlayerScorecardProps) {
         <React.Fragment>
             <Typography sx={{ mb: 1 }} variant="h5">
                 Pilot: {player.pilotShip.name}
+                <Link to={NavDests.pilotShips.forId(player.pilotShip.id)}>
+                    &rarr;
+                </Link>
             </Typography>
             <Typography variant="body1">
                 <strong>Special Ability: </strong>
@@ -180,6 +185,9 @@ function ShipSection(props: PlayerScorecardProps) {
         <React.Fragment>
             <Typography sx={{ mb: 1 }} variant="h5">
                 Ship: {player.pilotShip.ship.name}
+                <Link to={NavDests.pilotShips.forId(player.pilotShip.id)}>
+                    &rarr;
+                </Link>
             </Typography>
             <Typography variant="body1">
                 <strong>Ship Type: </strong>
